@@ -1,0 +1,7 @@
+fastapi
+pydantic
+uvicorn
+firebase-admin
+transformers
+tensorflow
+protobuf==3.20.3
