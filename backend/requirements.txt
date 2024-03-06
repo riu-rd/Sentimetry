@@ -1,7 +1,5 @@
-fastapi
-pydantic
-uvicorn
-firebase-admin
-transformers
-tensorflow
-protobuf==3.20.3
+fastapi==0.110.0
+uvicorn==0.27.1
+pydantic==2.6.3
+transformers==4.38.2
+firebase-admin==6.4.0
