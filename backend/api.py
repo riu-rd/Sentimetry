@@ -1,5 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException, status, Response
+from fastapi.responses import RedirectResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from firebase_admin import auth, credentials, initialize_app
 import re
 from collections import defaultdict
 
@@ -15,15 +19,50 @@ emotion = pipeline('sentiment-analysis', model='arpanghoshal/EmoRoBERTa', top_k=
 class JournalEntry(BaseModel):
     text: str
 
+# Initialize Firebase Connection
+# credential = credentials.Certificate('./key.json')
+# initialize_app(credential)
+
+# Firebase Auth Verifier
+# def get_user_token(res: Response, credential: HTTPAuthorizationCredentials=Depends(HTTPBearer(auto_error=False))):
+#     if credential is None:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="Bearer authentication is needed",
+#             headers={'WWW-Authenticate': 'Bearer realm="auth_required"'},
+#         )
+#     try:
+#         decoded_token = auth.verify_id_token(credential.credentials)
+#     except Exception as err:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail=f"Invalid authentication from Firebase. {err}",
+#             headers={'WWW-Authenticate': 'Bearer error="invalid_token"'},
+#         )
+#     res.headers['WWW-Authenticate'] = 'Bearer realm="auth_required"'
+#     return decoded_token
+
+
 # Start the app
 app = FastAPI()
 
+# Setup CORS policy
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# APIs
 @app.get("/")
-async def hello():
-    return {"msg":"Hello, this is API server"} 
+async def sentimetry():
+    # return {"message":"Hello, this is the API server for Sentimetry. Go to /docs to test the APIs."} 
+    return RedirectResponse(url="/docs")
 
 @app.post("/predict-text/{text}")
-async def predict_emotions(text):
+async def predict_emotions(text : str): # user = Depends(get_user_token)
     prediction = emotion(text)[0]
     sorted_prediction = sorted(prediction, key=lambda x: x['score'], reverse=True)
     predicted_emotion = sorted_prediction[0]['label']
