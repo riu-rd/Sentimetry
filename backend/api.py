@@ -6,14 +6,25 @@ from pydantic import BaseModel
 from firebase_admin import auth, credentials, initialize_app
 import re
 from collections import defaultdict
+import requests
 
 # HuggingFace
 from transformers import RobertaTokenizerFast, TFRobertaForSequenceClassification, pipeline
 
 # Get the EmoRoBERTa from HuggingFace
-tokenizer = RobertaTokenizerFast.from_pretrained("arpanghoshal/EmoRoBERTa")
-model = TFRobertaForSequenceClassification.from_pretrained("arpanghoshal/EmoRoBERTa")
-emotion = pipeline('sentiment-analysis', model='arpanghoshal/EmoRoBERTa', top_k=None)
+# tokenizer = RobertaTokenizerFast.from_pretrained("arpanghoshal/EmoRoBERTa")
+# model = TFRobertaForSequenceClassification.from_pretrained("arpanghoshal/EmoRoBERTa")
+# emotion = pipeline('sentiment-analysis', model='arpanghoshal/EmoRoBERTa', top_k=None)
+
+# Using EmoRoBERTa API
+API_TOKEN = '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'
+
+API_URL = "https://api-inference.huggingface.co/models/arpanghoshal/EmoRoBERTa"
+headers = {"Authorization": f"Bearer {API_TOKEN}"}
+
+def query(payload):
+	response = requests.post(API_URL, headers=headers, json=payload)
+	return response.json()
 
 # Class for Entry
 class JournalEntry(BaseModel):
@@ -63,7 +74,9 @@ async def sentimetry():
 
 @app.post("/predict-text/{text}")
 async def predict_emotions(text : str): # user = Depends(get_user_token)
-    prediction = emotion(text)[0]
+    text_json = {"inputs":f"{text}"}
+    emotion = query(text_json)
+    prediction = emotion[0]
     sorted_prediction = sorted(prediction, key=lambda x: x['score'], reverse=True)
     predicted_emotion = sorted_prediction[0]['label']
     probability = round(sorted_prediction[0]['score'] * 100, 1)
@@ -78,7 +91,9 @@ async def predict_emotions(entry : JournalEntry):
     # Create a list of all predictions per text
     predictions_per_text = []
     for text in text_list:
-        predictions_per_text.append(emotion(text)[0])
+        text_json = {"inputs":f"{text}"}
+        emotion = query(text_json)
+        predictions_per_text.append(emotion[0])
     
     # Create a defaultdict to aggregate scores for each label
     total = defaultdict(float)
