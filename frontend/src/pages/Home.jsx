@@ -45,7 +45,7 @@ const Home = () => {
     auth.currentUser?.getIdToken(true)
     .then((idToken) => {
       console.log("token: ", idToken)
-      axios.post(`http://127.0.0.1:8000/predict-text/${sentence}`, {}, {headers: {Authorization: `Bearer ${idToken}`}})
+      axios.post(`https://sentimetry-api.onrender.com/predict-text/${sentence}`, {}, {headers: {Authorization: `Bearer ${idToken}`}})
       .then((response) => {
         setSentence('');
         setSentenceResult(response.data.prediction);
@@ -69,7 +69,7 @@ const Home = () => {
     e.preventDefault();
 
     setLoadingParagraph(true);
-    axios.post(`http://127.0.0.1:8000/predict-journal`, {
+    axios.post(`https://sentimetry-api.onrender.com/predict-journal`, {
       text: paragraph
     })
     .then((response) => {
