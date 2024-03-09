@@ -1,0 +1,77 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-image: url('../bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.form-container {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 700px; 
+    width: 150%; 
+    margin: 0 auto; 
+    margin-top: 10vh; 
+    padding: 2rem;
+    background-color: #ffffff;
+    border: 1px solid #d2d6dc;
+    border-radius: 100rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: auto;
+  }
+  
+
+.form-title {
+  font-size: 2rem; 
+  font-weight: 600;
+  margin-bottom: 2rem; 
+  text-align: center; 
+}
+
+
+.form-input {
+  width: 80%;
+  padding: 0.75rem;
+  border-radius: 100rem; 
+  border: 1px solid #cbd5e0; 
+  margin-bottom: 1rem;
+  font-size: 1rem; 
+  background-color: #D9D9D9; 
+
+}
+
+
+
+.form-button {
+    width: 35%;
+    padding: 0.75rem;
+    background-color: #FFBB20;
+    color: #ffffff;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 1rem; 
+    margin-left: auto; 
+  }
+
+.form-button:hover {
+  background-color: #ffac1f; 
+}
+
+
+.form-link {
+  color: #4299e1;
+  text-decoration: none; 
+}
+
+.form-link:hover {
+  color: #2b6cb0;
+  text-decoration: underline; 
+}
