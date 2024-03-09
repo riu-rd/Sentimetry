@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { getAuth, signOut } from "firebase/auth";
 import axios from 'axios';
+import predictEmotions from '../hooks/predictEmotions';
 
 const Home = () => {
   // Declarations
-  const [sentence, setSentence] = useState('');
   const [paragraph, setParagraph] = useState('');
-  const [sentenceResult, setSentenceResult] = useState('');
   const [paragraphResult, setParagraphResult] = useState('');
-  const [loadingSentence, setLoadingSentence] = useState(false);
   const [loadingParagraph, setLoadingParagraph] = useState(false);
   const auth = getAuth();
 
   // On change
-  const handleSentenceChange = (e) => {
-    setSentence(e.target.value);
-  }
-
   const handleParagraphChange = (e) => {
     setParagraph(e.target.value);
   }
@@ -34,34 +28,6 @@ const Home = () => {
   // Clear Text
   const handleClear = () => {
     setParagraphResult('');
-    setSentenceResult('');
-  }
-
-  // Submit Text
-  const onSubmitText = (e) =>{
-    e.preventDefault();
-
-    setLoadingSentence(true);
-    auth.currentUser?.getIdToken(true)
-    .then((idToken) => {
-      console.log("token: ", idToken)
-      axios.post(`https://sentimetry-api.onrender.com/predict-text/${sentence}`, {}, {headers: {Authorization: `Bearer ${idToken}`}})
-      .then((response) => {
-        setSentence('');
-        setSentenceResult(response.data.prediction);
-        setLoadingSentence(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoadingSentence(false);
-      })
-    }).catch(function(error) {
-        console.error(error);
-        setLoadingSentence(false);
-    });
-
-    
-    
   }
 
   // Submit Paragraph
@@ -69,23 +35,21 @@ const Home = () => {
     e.preventDefault();
 
     setLoadingParagraph(true);
-    axios.post(`https://sentimetry-api.onrender.com/predict-journal`, {
-      text: paragraph
-    })
-    .then((response) => {
-      setParagraphResult('');
-      let text = ''
-      response.data.predictions.forEach((prediction) => {
-        text += JSON.stringify(prediction) + '\n'
-      })
-      setParagraphResult(text);
-      setParagraph('');
-      setLoadingParagraph(false);
+    predictEmotions(paragraph)
+    .then((result) => {
+        setParagraphResult('');
+        let text = ''
+        result.predictions.forEach((prediction) => {
+            text += JSON.stringify(prediction) + '\n'
+        });
+        setParagraphResult(text);
+         setParagraph('');
+         setLoadingParagraph(false);
     })
     .catch((err) => {
-      console.error(err);
-      setLoadingParagraph(false);
-    })
+        console.error(err);
+        setLoadingParagraph(false);
+     });
   }
 
   return (
@@ -148,14 +112,14 @@ const Home = () => {
                     <fieldset className='space-y-6'>
                         <form onSubmit={onSubmitParagraph}>
                             <textarea rows={13} cols={50} placeholder='Enter a Paragraph' onChange={handleParagraphChange} value={paragraph}
-                                      className='rounded-2xl p-4 w-full bg-white mb-3'/>
+                                      className='rounded-2xl p-4 w-full bg-white mb-3 text-black'/>
                             <button style={{backgroundColor:'#BE912B'}} type='submit'
                                     className='font-bold text-2xl p-4 m-0 rounded-2xl'>Submit</button>
                         </form>
                         <div>
                             <h3 style={{color:'#BE912B'}} className='text-4xl font-bold mb-3'>Result</h3>
                             <textarea value={loadingParagraph ? "Loading. . ." : paragraphResult} readOnly={true} rows={10} cols={80} 
-                                    placeholder='Result' className='rounded-2xl bg-white p-4 w-full'/>
+                                    placeholder='Result' className='rounded-2xl bg-white p-4 w-full text-black'/>
                         </div>
                     </fieldset>
                 </div>
