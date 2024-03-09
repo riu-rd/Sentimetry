@@ -1,3 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Gothic+A1&family=Linden+Hill:ital@0;1&display=swap');
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -82,3 +87,17 @@ button {
 .clear {
   display: inline;
 }
+
+.linden-hill-regular {
+    font-family: "Linden Hill", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .linden-hill-regular-italic {
+    font-family: "Linden Hill", serif;
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  
