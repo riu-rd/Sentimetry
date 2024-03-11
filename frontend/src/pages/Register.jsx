@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import '../tailwind.css'; // Import Tailwind CSS file
+import bgImg from './bg.png'
 
 const Register = ({ user }) => {
   // Check if user is already authenticated
