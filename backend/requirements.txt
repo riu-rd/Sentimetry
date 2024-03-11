@@ -1,10 +1,3 @@
 fastapi
 uvicorn
-pydantic
-pydantic-core
-transformers
-tensorflow
-firebase-admin
-torch
-torchaudio
-torchvision
+replicate

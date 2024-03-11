@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAuth, signOut } from "firebase/auth";
 import axios from 'axios';
+import predictEmotions from '../hooks/predictEmotions';
 
 const admirationResponses = [
     "I'm truly impressed by your words. You have a way of inspiring greatness.",
@@ -245,6 +246,7 @@ const Home = () => {
   const [prompt, setPrompt] = useState("");
   const auth = getAuth();
 
+  // On change
   const handleParagraphChange = (e) => {
     setParagraph(e.target.value);
   }
@@ -356,9 +358,9 @@ const Home = () => {
 
     })
     .catch((err) => {
-      console.error(err);
-      setLoadingParagraph(false);
-    })
+        console.error(err);
+        setLoadingParagraph(false);
+     });
   }
 
   return (
