@@ -35,7 +35,8 @@ function App() {
         :
         (<BrowserRouter>
         <Routes>
-          <Route path='/' element={<Login user={user}/>}/>
+          <Route path='/' element={<Landing user={user}/>}/>
+          <Route path='/login' element={<Login user={user}/>}/>
           <Route path='/register' element={<Register user={user} />}/>
           <Route path='/home' element={<ProtectedRoute user={user} children={<Home />} />}/>
           <Route path='/landing' element={<Landing user={user}/>}/>
