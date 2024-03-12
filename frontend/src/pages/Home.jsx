@@ -243,7 +243,8 @@ const Home = () => {
   const [paragraphResult, setParagraphResult] = useState('');
   const [loadingParagraph, setLoadingParagraph] = useState(false);
   const [aiResponse, setAiResponse] = useState('');
-  const [prompt, setPrompt] = useState("");
+  const [show, setShow] = useState('log')
+
   const auth = getAuth();
 
   // On change
@@ -272,20 +273,14 @@ const Home = () => {
     return responses[randomIndex];
   }
 
-
-
-  // Submit Paragraph
   const onSubmitParagraph = (e) =>{
     e.preventDefault();
 
     setLoadingParagraph(true);
-    axios.post(`https://sentimetry-api.onrender.com/predict-journal`, {
-      text: paragraph
-    })
+    predictEmotions(paragraph)
     .then((response) => {
-      setParagraphResult('');
-      let text = ''
-      const jsonData = response.data.predictions; // Access the 'predictions' property
+        setParagraphResult('');
+        const jsonData = response.predictions; // Access the 'predictions' property
 
         // Initialize variables for the emotion with the highest score
         let maxScore = -1;
@@ -321,7 +316,7 @@ const Home = () => {
         case 'grief': setAiResponse(getRandomResponse(griefResponses)); break;
         case 'joy': setAiResponse(getRandomResponse(joyResponses)); break;
         case 'love': setAiResponse(getRandomResponse(loveResponses)); break;
-        case 'nervousness': break;
+        case 'nervousness': setAiResponse(getRandomResponse(nervousnessResponses)); break;
 
         case 'optimism': setAiResponse(getRandomResponse(optimismResponses)); break;
         case 'pride': setAiResponse(getRandomResponse(prideResponses)); break;
@@ -332,28 +327,27 @@ const Home = () => {
         case 'surprise': setAiResponse(getRandomResponse(surpriseResponses)); break;
         case 'neutral': setAiResponse(getRandomResponse(neutralResponses)); break;
         default: setAiResponse('no emotion matched')
-
-
-
       }
-      setPrompt(`The user wrote ${paragraph}, the user portrays the emotion: ${emotion}.
-                 The task is to respond, give advice, and empathize with this entry by getting a
-                 random response. The response is ${aiResponse}. Tailor this response in a way that it 
-                 will sound personalized, no bias, with good intention, and is related to the emotion
-                 ${emotion}.
-      `)
-      setParagraphResult(emotion);
-      setParagraph('');
-      setLoadingParagraph(false);
+        setParagraphResult(emotion);
+        setParagraph('');
+        const prompt = `the user wrote : ${paragraph}
+        The user portrays the emotion/emotions: ${emotion}. Using the information provided above, respond, give advice, and symphatize witht he users
+        entry by using the sample responses below as a foundation. ${`${emotion}Responses`}. Make your final output personalized, no bias, and is related to
+        the emotions of the user. 
+        ` 
+        console.log("prompt " +  prompt)
 
-      axios
-        .post("http://127.0.0.1:5000/api", { message: prompt })
+        
+        axios
+        .post('https://sentimetry-api.onrender.com/get-response', { text: prompt})
         .then((res) => {
-            setAiResponse(res.data)
+            console.log("Response of AI: ",res.data.response);
+            setAiResponse(res.data.response)
+            setLoadingParagraph(false);
         })
         .catch((err) => {
-            console.log(err);
-        });
+            console.error(err);
+        })
 
 
     })
@@ -368,12 +362,126 @@ const Home = () => {
         <div style={{backgroundColor:'#8DA290'}} className='w-screen m-0 p-4 ps-8 text-md'>
             <h1>SentiMetry</h1>
         </div>
-        <div className='p-10 px-28'>
+        <div className='p-10 px-28 h-screen'>
             <div className='mb-5'>
                 <h1 style={{color:'#BE912B'}} className='font-bold'>LOGS</h1>
             </div>
-            <div className='flex gap-10'>
-                <div className='space-y-10 w-1/2'>
+            <div className='flex gap-10 h-4/5'>
+                <div className='space-y-10 w-1/2 overflow-y-scroll'>
+                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'
+                         onClick={() => setShow('history')}>
+                        <h3>
+                            {/*place text here from database*/ }
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        </h3>
+                        <h4 className='text-end'>
+                            1/1/2024
+                            {/*place date here from database*/ }
+                        </h4>
+                    </div>
+
+                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
+                        <h3>
+                            {/*place text here from database*/ }
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        </h3>
+                        <h4 className='text-end'>
+                            1/1/2024
+                            {/*place date here from database*/ }
+                        </h4>
+                    </div>
+
+                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
+                        <h3>
+                            {/*place text here from database*/ }
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        </h3>
+                        <h4 className='text-end'>
+                            1/1/2024
+                            {/*place date here from database*/ }
+                        </h4>
+                    </div>
+
+                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
+                        <h3>
+                            {/*place text here from database*/ }
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        </h3>
+                        <h4 className='text-end'>
+                            1/1/2024
+                            {/*place date here from database*/ }
+                        </h4>
+                    </div>
+
+
+                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
+                        <h3>
+                            {/*place text here from database*/ }
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        </h3>
+                        <h4 className='text-end'>
+                            1/1/2024
+                            {/*place date here from database*/ }
+                        </h4>
+                    </div>
+
+                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
+                        <h3>
+                            {/*place text here from database*/ }
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        </h3>
+                        <h4 className='text-end'>
+                            1/1/2024
+                            {/*place date here from database*/ }
+                        </h4>
+                    </div>
+
+                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
+                        <h3>
+                            {/*place text here from database*/ }
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        </h3>
+                        <h4 className='text-end'>
+                            1/1/2024
+                            {/*place date here from database*/ }
+                        </h4>
+                    </div>
+
+                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
+                        <h3>
+                            {/*place text here from database*/ }
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                        </h3>
+                        <h4 className='text-end'>
+                            1/1/2024
+                            {/*place date here from database*/ }
+                        </h4>
+                    </div>
+
                     <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
                         <h3>
                             {/*place text here from database*/ }
@@ -418,39 +526,49 @@ const Home = () => {
                     
                 </div>
 
-                <div className='w-full'>
-                    <h2 style={{color:'#BE912B'}} className='text-4xl font-bold mb-3'>How Are You Feeling?</h2>
-                    <fieldset className='space-y-6'>
-                        <form onSubmit={onSubmitParagraph}>
-                            <textarea rows={10} cols={50} placeholder='Enter a Paragraph' onChange={handleParagraphChange} value={paragraph}
-                                      className='rounded-2xl p-4 w-full bg-white mb-3 text-black text-xl'/>
-                            <button style={{backgroundColor:'#BE912B'}} type='submit'
-                                    className='font-bold text-2xl p-4 m-0 rounded-2xl'>Submit</button>
-                        </form>
-                        <div>
-                            <h3 style={{color:'#BE912B'}} className='text-4xl font-bold mb-3'>Result</h3>
-                            <textarea value={loadingParagraph ? "Loading. . ." : "You're emotion is: " + paragraphResult + '\n' + aiResponse} readOnly={true} rows={10} cols={80} 
-                                    placeholder='Result' className='rounded-2xl bg-white p-4 w-full text-black text-xl'>
-                            </textarea>
-                            
-                        </div>
-                    </fieldset>
-                </div>
+                {show == 'log' ? (  
+                    <div className='w-full'>
+                        <h2 style={{color:'#BE912B'}} className='text-4xl font-bold mb-3'>How Are You Feeling?</h2>
+                        <fieldset className='space-y-6'>
+                            <form onSubmit={onSubmitParagraph}>
+                                <textarea rows={10} cols={50} placeholder='Enter a Paragraph' onChange={handleParagraphChange} value={paragraph}
+                                        className='rounded-2xl p-4 w-full bg-white mb-3 text-black text-xl'/>
+                                <button style={{backgroundColor:'#BE912B'}} type='submit'
+                                        className='font-bold text-2xl p-4 m-0 rounded-2xl'>Submit</button>
+                            </form>
+                            <div>
+                                <h3 style={{color:'#BE912B'}} className='text-4xl font-bold mb-3'>Result</h3>
+                                <textarea value={loadingParagraph ? "Loading. . ." : "You're emotion is: " + paragraphResult + '\n' + aiResponse} readOnly={true} rows={10} cols={80} 
+                                        placeholder='Result' className='rounded-2xl bg-white p-4 w-full text-black text-xl'>
+                                </textarea>
+                                <h1>{aiResponse}</h1>
+                                
+                            </div>
+                        </fieldset>
+                    </div>
+                ) : (<> </>)}
+
+                {show == 'history' ? (  
+                    <div style={{backgroundColor:'#8DA290'}} className='w-full p-7 rounded-2xl'>
+                        <h1>Journal Entry:</h1>
+                        <h1>Emotion:</h1>
+                        <h1>Response:</h1>
+                    </div>
+                ) : (<> </>)}
 
             </div>
-            <div className='flex justify-end p-3 space-x-4'>
-                <button onClick={handleLogout} className='clear m-0'>Log Out</button>
-                <button onClick={handleClear} className='clear m-0'>Clear All Results</button>
+            {show == 'log' ? (  
+                <div className='flex justify-end p-3 space-x-4'>
+                    <button onClick={handleLogout} className='clear m-0'>Log Out</button>
+                    <button onClick={handleClear} className='clear m-0'>Clear All Results</button>
+                </div>
+            ) : (<> </>)}
+    
+            {show == 'history' ? (  
+                <div className='flex justify-end p-3 space-x-4'>
+                <button style={{background:'#BE912B'}} onClick={() => setShow('log')} className='clear m-0'>Done</button>
             </div>
-            {/*<fieldset>
-                <form onSubmit={onSubmitText}>
-                <h3>Emotion from a Sentence</h3>
-                <input type='text' placeholder='Enter a Sentence' onChange={handleSentenceChange} value={sentence}/>
-                <button type='submit'>Submit Text</button>
-                </form>
-                <h3>Result</h3>
-                <p>{loadingSentence ? "Loading. . ." : sentenceResult}</p>
-            </fieldset> */}
+            ) : (<> </>)}
 
         </div>
 
