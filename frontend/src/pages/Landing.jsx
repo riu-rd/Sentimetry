@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import bgImg from "./bg.png";
 import { useNavigate } from "react-router-dom";
 import Login from "../components/Login";
+import Register from "../components/Register";
 
 export default function Landing() {
   const navigate = useNavigate();
+  const [page, setPage] = useState('login')
+
+  function changePage (page){
+    setPage(page)
+  }
   return (
     <div
       style={{ backgroundImage: `url(${bgImg})` }}
@@ -20,9 +26,17 @@ export default function Landing() {
           </h2>
         </div>
 
-        <div className="px-20">
-          <Login />
-        </div>
+        {page == 'login' ? (
+            <div className="px-20">
+            <Login changePage={changePage}/>
+            </div>
+        ) : (<></>)}
+
+        {page == 'register' ? (
+            <div className="px-20">
+            <Register changePage={changePage}/>
+            </div>
+        ) : (<></>)}
       </div>
     </div>
   );
