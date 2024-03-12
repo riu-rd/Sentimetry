@@ -27,7 +27,7 @@ app.add_middleware(
 )
 
 # APIs
-@app.get("/d")
+@app.get("/")
 async def welcome():
     return {"message":"Hello, this is the API server for Sentimetry. Go to /docs to test the APIs."}
 
