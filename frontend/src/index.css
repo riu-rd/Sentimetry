@@ -95,4 +95,10 @@ button {
     font-style: italic;
   }
 
-  
+  .century-gothic {
+    font-family: "Century Gothic", sans-serif;
+  } 
+
+  .dimmed-background {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  }
