@@ -15,35 +15,38 @@ export const amusementResponses = [
 ];
 
 export const angerResponses = [
-  "I sense frustration in your words. It's okay to feel upset. Let's talk it out.",
-  "I can feel the intensity. Take a deep breath and let's discuss what's bothering you.",
-  "Anger is a powerful emotion. Let's find a ructive way to address it together.",
-  "I sense your frustration. It's important to express and manage anger healthily.",
-  "Your anger is valid. Let's work through it and find a positive outlet.",
+  "Acknowledging your anger is the first step to managing it. You have the strength to navigate through this emotion.",
+  "Anger is a signal; use it to identify what matters most to you. Channel that passion into positive action.",
+  "I understand your anger, and I'm here to support you as you process and express it in a healthy way.",
+  "In the face of anger, remember the power of deep breaths. You're in control of your reactions, and patience is a strength.",
+  "An underrated response to battle anger is to take a deep breath for 10 seconds. It's a simple yet effective tool in regaining control.",
+  
 ];
 
 export const annoyanceResponses = [
-  "Seems like something is bothering you. Let's chat about what's on your mind.",
-  "I sense a bit of annoyance. What's going on? Let's talk it out.",
-  "Annoyance happens to the best of us. Share your thoughts, and we'll work through it.",
-  "It looks like something is irking you. I'm here to listen and help.",
-  "Feeling annoyed? Let's address the source and find a solution together.",
+  "It's okay to feel annoyed; your emotions are valid. Take a moment to acknowledge and then let it go.",
+  "Annoyance is a passing cloud; your resilience is the clear sky behind it.",
+  "I see your annoyance and appreciate your patience in handling it. You're in control of your reactions.",
+  "In the face of annoyance, choose understanding over frustration. Your calm response is a strength.",
+  "An underrated response to annoyance is perspective. Take a step back and see the bigger picture. You've got this.",
+
 ];
 
 export const approvalResponses = [
-  "Great job! Your efforts are truly appreciated.",
-  "I'm impressed by your work. Keep up the excellent job!",
-  "You're doing fantastic! Your hard work is paying off.",
-  "Your achievements deserve recognition. Well done!",
-  "I approve of your approach. Keep moving forward with confidence.",
+  "Your accomplishments deserve recognition, and I wholeheartedly approve of the effort you've put in.",
+  "I see your dedication, and my approval is a testament to your positive impact.",
+  "In your pursuit of excellence, know that your actions have my full approval and support.",
+  "You've earned my approval through your hard work and commitment. Keep thriving!",
+
 ];
 
 export const caringResponses = [
-  "I can sense a caring tone in your words. Your compassion is heartwarming.",
-  "Your empathy shines through. It's clear you genuinely care about others.",
-  "Your caring nature is a beautiful trait. Keep spreading kindness.",
-  "I appreciate your concern. Your caring attitude makes a difference.",
-  "Your words reflect a deep sense of care. It's wonderful to see.",
+  "Your caring nature is a gift. Your kindness ripples positivity in the lives of those around you.",
+  "I appreciate the compassion you bring to the world. Your caring heart makes a difference.",
+  "Caring for others is a strength. Your empathy creates connections that enrich both your life and theirs.",
+  "Your caring spirit is a beacon of warmth and understanding. The world needs more people like you.",
+  "In your caring, you create a supportive environment. Remember to extend that same care to yourself.",
+
 ];
 
 export const confusionResponses = [
@@ -55,11 +58,11 @@ export const confusionResponses = [
 ];
 
 export const curiousityResponses = [
-  "Your curiosity is inspiring. Let's explore together and satisfy your inquisitive mind.",
-  "I love your curiosity! Asking questions is the first step to discovering new things.",
-  "Curiosity is a wonderful trait. What would you like to explore or learn more about?",
-  "Your inquisitive nature is a strength. Let's dive into the wonders of your curiosity.",
-  "I can sense your eagerness to learn. Let's satisfy that curiosity together.",
+  "Curiosity is the spark of endless possibilities. Dive into the unknown, and let your inquisitive nature guide you.",
+  "Your curiosity is a compass leading you to new realms of knowledge. Keep asking questions and exploring.",
+  "Embrace curiosity as a lifelong companion; it will open doors to growth and enlightenment.",
+  "I admire your insatiable curiosity; it's the key to unlocking the vast potential of your mind.",
+
 ];
 
 export const desireResponses = [
@@ -71,11 +74,12 @@ export const desireResponses = [
 ];
 
 export const disappointmentResponses = [
-  "I sense some disappointment. It's okay to feel this way. Let's talk about it.",
-  "Disappointment is a tough emotion. I'm here to support you through it.",
-  "Your feelings of disappointment are valid. Let's explore how to move forward.",
-  "I'm sorry to hear you're feeling disappointed. Let's discuss what happened.",
-  "Disappointment is a part of life. How can we turn this moment around?",
+  "Disappointment is a detour, not a dead end. You'll find a new path forward.",
+  "Your worth is not diminished by disappointment. Use it as a stepping stone to something better.",
+  "I see your disappointment and believe in your ability to turn it into resilience and growth.",
+  "In disappointment, there's room for learning and redirection. You're capable of navigating this setback.",
+  "Allow yourself to feel disappointed, but remember, it's just one chapter in a much bigger story.",
+
 ];
 
 export const disapprovalResponses = [
@@ -111,35 +115,37 @@ export const excitementResponses = [
 ];
 
 export const fearResponses = [
-  "It seems like fear is present. Let's talk about what's causing this emotion and find support.",
-  "Fear can be overwhelming. I'm here to help you navigate through it.",
-  "Your feelings of fear are valid. Let's explore ways to address and overcome them.",
-  "Fear is a natural response. Let's work together to understand and manage it.",
-  "I understand that fear can be challenging. You're not alone; let's face it together.",
+  "It's okay to feel fear; it shows you're human. You've got the strength to overcome it.",
+  "Take a deep breath; fear is just a momentary hurdle. You've got the courage to face it head-on.",
+  "I see your fear and believe in your ability to navigate it. You're stronger than you think.",
+  "In the face of fear, remember that you have the power to choose courage. You're not alone.",
+  "Fear can be daunting, but I know you can handle it. Trust yourself and take it one step at a time.",
+
 ];
 
 export const gratitudeResponses = [
-  "Your gratitude warms my virtual heart. What are you feeling thankful for today?",
-  "Expressing gratitude is a beautiful practice. What has sparked this feeling in you?",
-  "I'm grateful for your kind words. What are you thankful for in this moment?",
-  "Gratitude is a powerful emotion. Let's continue to cultivate a thankful mindset.",
-  "I appreciate your gratitude. What positive experiences are you cherishing right now?",
+  "Expressing gratitude is a beautiful reflection of your compassionate soul. Thank you for your kindness.",
+  "Your attitude of gratitude is a beacon of positivity, brightening the lives of those around you.",
+  "In gratitude, we find joy. I appreciate the positive energy you bring to every interaction.",
+  "I'm grateful for your presence and your positive impact on my life. Thank you.",
+
 ];
 
 export const griefResponses = [
-  "I sense a deep sorrow. Grieving is a process, and I'm here to support you.",
-  "Grief is a heavy emotion. Let's talk about your feelings and find comfort together.",
-  "I'm here for you during times of grief. How can I support you right now?",
-  "Your feelings of loss are valid. Let's navigate through the grieving process together.",
-  "Grief is a challenging emotion. Take your time, and I'm here whenever you're ready to talk.",
+  "Grieving is a process, and taking it one step at a time is okay. I'm here for you.",
+  "I see the weight of grief you're carrying. Take all the time you need; remember, healing is not linear.",
+  "Grief is a testament to the love and connections you've had. Honor those memories as you navigate through this difficult time.",
+  "You're not alone in your grief. Lean on those who care about you, and allow their support to be a source of strength.",
+  "Grief is a journey, and you're gracefully moving through it. Be kind to yourself during this process.",
+
 ];
 
 export const joyResponses = [
-  "Your joy is contagious! What's bringing you so much happiness right now?",
-  "I can feel the positive vibes in your words. What's contributing to your joy?",
-  "Joy is a beautiful emotion. Let's celebrate the things that bring you happiness.",
-  "Your happiness is uplifting. What joyful moments are you experiencing?",
-  "I love the joy in your words. Let's savor these positive feelings together!",
+  "Your joy is contagious, spreading warmth and happiness wherever you go. Keep shining bright.",
+  "In moments of joy, savor the beauty of life. Your happiness is a reflection of your vibrant spirit.",
+  "I celebrate the joy you bring into the world. May your days be filled with laughter and light.",
+  "Your joy is a reminder that life is meant to be enjoyed. Embrace the happiness you create.",
+  
 ];
 
 export const loveResponses = [
@@ -151,11 +157,12 @@ export const loveResponses = [
 ];
 
 export const nervousnessResponses = [
-  "Feeling a bit nervous? It's okay; we can work through it together.",
-  "Nervousness is a common emotion. What's causing you to feel this way?",
-  "I sense some nervous energy. Let's address the source and ease those nerves.",
-  "Nervousness happens to the best of us. Take a deep breath, and we'll navigate through it.",
-  "It's okay to feel nervous. I'm here to provide support and guidance.",
+  "Nervousness is a sign that you're stepping out of your comfort zone. Embrace the challenge; you'll come out stronger.",
+  "Feeling nervous is natural, a part of the excitement that comes with new opportunities. You've got the skills to shine.",
+  "Your nervous energy is a spark of potential. Channel it into enthusiasm and watch as you exceed your own expectations.",
+  "Nervousness is temporary; your confidence will rise as you navigate through it. Believe in yourself.",
+  "An underrated response to nervousness is self-compassion. Treat yourself with kindness as you face the unknown.",
+
 ];
 
 export const optimismResponses = [
@@ -175,11 +182,12 @@ export const prideResponses = [
 ];
 
 export const realizationResponses = [
-  "It seems like you've had a moment of realization. What insights have you uncovered?",
-  "Realizations are powerful. What new perspectives have you gained?",
-  "Your moment of realization is significant. How can we build on this newfound understanding?",
-  "I appreciate your self-awareness. What realizations are guiding you right now?",
-  "Realizing something new is a valuable experience. Let's explore its implications together.",
+  "Embracing realizations is a step toward personal growth. You're evolving and gaining insight.",
+  "Your realizations are keys to unlocking new possibilities. Trust in your ability to adapt and thrive.",
+  "Realizations bring clarity. Use this newfound understanding to shape the path ahead.",
+  "I celebrate the realizations you're having. Each one is a building block for a more authentic and fulfilling life.",
+  "As you experience realizations, remember that change is a constant. Embrace it, and let it guide you toward positive transformation.",
+  
 ];
 
 export const reliefResponses = [
@@ -191,33 +199,34 @@ export const reliefResponses = [
 ];
 
 export const remorseResponses = [
-  "It seems like you're feeling remorseful. It's okay; we all make mistakes. Let's discuss it.",
-  "Remorse is a challenging emotion. How can we learn and grow from this experience?",
-  "I sense your regret. Let's explore ways to make amends and move forward positively.",
-  "Feeling remorse is a human experience. Let's navigate through it together.",
-  "Your feelings of remorse are valid. Let's address the situation and find a path to resolution.",
+  "Feeling remorse shows your capacity for growth. Learn from it and use it as a compass for better choices.",
+  "You're not defined by your mistakes. Embrace remorse as a guide toward positive change.",
+  "I see your remorse and believe in your ability to make amends. You're on a path of self-improvement.",
+  "Remorse is a sign of a reflective heart. Forgive yourself and focus on your steps toward a better future.",
+  "Your remorse is a powerful force for transformation. Use it to build a more compassionate and understanding self.",
+
 ];
 
 export const sadnessResponses = [
-  "I sense a deep sadness. It's okay to feel this way. I'm here to support you.",
-  "Sadness is a heavy emotion. Let's talk about what's on your mind and find comfort.",
-  "I'm here for you during moments of sadness. How can I provide support?",
-  "Your feelings of sadness are valid. Let's navigate through this difficult time together.",
-  "Sadness is a part of life. Take your time, and I'm here whenever you're ready to talk.",
+  "I see your sadness, and it's okay to feel that way. You're allowed to process and heal.",
+  "Your sadness doesn't define you; it's just a chapter. Brighter days are ahead, and I'll be here with you.",
+  "It takes strength to embrace your sadness. I'm here to support you as you navigate through these emotions.",
+  "You are worthy of love and compassion, even in moments of sadness. Allow yourself the space to heal.",
+  "Each tear is a testament to your resilience. Remember, you're not alone, and I believe in your ability to rise above this sadness.",
+
 ];
 
 export const surpriseResponses = [
-  "I can feel the surprise in your words. What unexpected event caught you off guard?",
-  "Surprises can be delightful or shocking. What was your reaction to this surprise?",
-  "Your sense of surprise is palpable. How can we explore and understand it together?",
-  "I love the element of surprise. What unexpected twists have brightened your day?",
-  "Surprise is a unique emotion. Let's embrace the unexpected and explore its impact.",
+  "Life's surprises add a touch of magic to our journey. Embrace the unexpected, and let it enrich your experience.",
+  "Surprises are gifts from the universe. Cherish the spontaneity that adds color to your days.",
+  "I love the element of surprise in your approach to life. It keeps things interesting and full of wonder.",
+  "Allow yourself to be pleasantly surprised; it's a reminder that life is full of delightful moments.",
+  
 ];
 
 export const neutralResponses = [
-  "I sense a neutral tone. How can we steer the conversation or explore a specific topic?",
-  "A neutral state is a good starting point. What areas of interest would you like to explore?",
-  "Neutrality is a blank canvas. Where shall we direct our conversation from here?",
-  "A neutral mood provides flexibility. What topics or activities would you like to delve into?",
-  "Your neutral stance allows for versatile conversations. What direction would you like to take?",
+  "Finding balance in neutrality is a gift. Enjoy the calm and gather strength for the chapters ahead.",
+  "In neutrality, discover the power of stillness. You're in the pause before the next beautiful melody.",
+  "Being neutral allows you to observe without bias. Trust in the unfolding of your unique journey.",
+  "Neutral moments are a canvas awaiting the brushstrokes of your emotions. Embrace the simplicity.",
 ];
