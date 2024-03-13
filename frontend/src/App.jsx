@@ -5,8 +5,8 @@ import { auth } from "../firebase.js";
 // Components
 import ProtectedRoute from "./components/ProtectedRoute";
 // Pages
-import Login from "./components/Login";
-import Register from "./components/Register.jsx";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
 import Home from "./pages/Home";
 import Landing from "./pages/Landing.jsx";
 

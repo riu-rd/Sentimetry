@@ -396,7 +396,7 @@ const Home = () => {
                             </form>
                             <div>
                                 <h3 style={{color:'#BE912B'}} className='text-4xl font-bold mb-3'>Result</h3>
-                                <textarea value={loadingParagraph ? "Loading. . ." : "You're emotion is: " + paragraphResult + '\n' + aiResponse} readOnly={true} rows={10} cols={80} 
+                                <textarea value={loadingParagraph ? "Loading. . ." : "Your emotion is: " + paragraphResult + '\n' + aiResponse} readOnly={true} rows={10} cols={80} 
                                         placeholder='Result' className='rounded-2xl bg-white p-4 w-full text-black text-xl'>
                                 </textarea>
                                 <h1>{aiResponse}</h1>
@@ -414,40 +414,22 @@ const Home = () => {
                     </div>
                 ) : (<> </>)}
 
-                <div
-                    style={{ backgroundColor: "#8DA290" }}
-                    className="rounded-2xl w-full p-4 h-max"
-                >
-                    <h3>
-                    {/*place text here from database*/}
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                    enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                    nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                    in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                    nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                    sunt in culpa qui officia deserunt mollit anim id est laborum
-                    </h3>
-                    <h4 className="text-end">
-                    1/1/2024
-                    {/*place date here from database*/}
-                    </h4>
-                </div>
+        
 
-                {show == 'log' ? (  
+            </div>
+
+            {show == 'log' ? (  
                     <div className='flex justify-end p-3 space-x-4'>
                         <button onClick={handleLogout} className='clear m-0'>Log Out</button>
                         <button onClick={handleClear} className='clear m-0'>Clear All Results</button>
                     </div>
-                ) : (<> </>)}
+            ) : (<> </>)}
 
-                {show == 'history' ? (  
-                    <div className='flex justify-end p-3 space-x-4'>
-                    <button style={{background:'#BE912B'}} onClick={() => setShow('log')} className='clear m-0'>Done</button>
-                </div>
-                ) : (<> </>)}
-
+            {show == 'history' ? (  
+                <div className='flex justify-end p-3 space-x-4'>
+                <button style={{background:'#BE912B'}} onClick={() => setShow('log')} className='clear m-0'>Done</button>
             </div>
+            ) : (<> </>)}
         </div>
     </div>
   );
