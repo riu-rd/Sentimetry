@@ -42,6 +42,7 @@ const Home = () => {
     const [aiResponse, setAiResponse] = useState('');
     const [show, setShow] = useState('log')
     const [emotions, setEmotions] = useState([])
+    const [showResult, setShowResult] = useState(false)
 
     const auth = getAuth();
 
@@ -64,7 +65,7 @@ const Home = () => {
 
     // Clear Text
     const handleClear = () => {
-    setParagraphResult("");
+        setShowResult(false)
     };
 
     function getRandomResponse(responses) {
@@ -75,7 +76,7 @@ const Home = () => {
 
     const onSubmitParagraph = (e) => {
         e.preventDefault();
-    
+        setShowResult(true)
         setLoadingParagraph(true);
         predictEmotions(paragraph)
             .then((response) => {
@@ -385,17 +386,19 @@ const Home = () => {
                         <h2 style={{color:'#BE912B'}} className='text-4xl font-bold mb-3'>How Are You Feeling?</h2>
                         <fieldset className='space-y-6'>
                             <form onSubmit={onSubmitParagraph}>
-                                <textarea rows={10} cols={50} placeholder='Enter a Paragraph' onChange={handleParagraphChange} value={paragraph}
+                                <textarea rows={10} cols={50} placeholder='Enter a Paragraph' onChange={(e) => handleParagraphChange(e)} value={paragraph}
                                         className='rounded-2xl p-4 w-full bg-white mb-3 text-black text-xl'/>
                                 <button style={{backgroundColor:'#BE912B'}} type='submit'
                                         className='font-bold text-2xl p-4 m-0 rounded-2xl'>Submit</button>
                             </form>
                             <div>
                                 <h3 style={{color:'#BE912B'}} className='text-4xl font-bold mb-3'>Result</h3>
-                                <textarea value={loadingParagraph ? "Loading. . ." : "Your emotions are: " + emotions + '\n' + aiResponse} readOnly={true} rows={10} cols={80} 
+                                {showResult ? (
+                                    <textarea value={loadingParagraph ? "Loading. . ." : "Based on your journal entry, your feelings are " + emotions[0] + ', ' + emotions[1] + ', and ' +  emotions[2] + ". I want you to know that " + aiResponse} readOnly={true} rows={10} cols={80} 
                                         placeholder='Result' className='rounded-2xl bg-white p-4 w-full text-black text-xl'>
-                                </textarea>
-                                <h1>{aiResponse}</h1>
+                                        <h1>{aiResponse}</h1>
+                                    </textarea>
+                                ) : (<textarea value={""} readOnly={true} rows={10} cols={80} placeholder='Result' className='rounded-2xl bg-white p-4 w-full text-black text-xl'> </textarea>)}
                                 
                             </div>
                         </fieldset>
