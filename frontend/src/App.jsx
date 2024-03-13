@@ -8,7 +8,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Home from "./pages/Home";
-import Landing from "./pages/Landing.jsx";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -35,7 +34,7 @@ function App() {
       ) : (
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Landing user={user} />} />
+            <Route path="/" element={<Login user={user} />} />
             <Route path="/login" element={<Login user={user} />} />
             <Route path="/register" element={<Register user={user} />} />
             <Route

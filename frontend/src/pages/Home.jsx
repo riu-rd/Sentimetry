@@ -41,6 +41,7 @@ const Home = () => {
     const [loadingParagraph, setLoadingParagraph] = useState(false);
     const [aiResponse, setAiResponse] = useState('');
     const [show, setShow] = useState('log')
+    const [emotions, setEmotions] = useState([])
 
     const auth = getAuth();
 
@@ -82,134 +83,129 @@ const Home = () => {
                 const jsonData = response.predictions; // Access the 'predictions' property
     
                 // Initialize variables for the emotion with the highest score
-                let maxScore = -1;
-                let emotion = "";
+                const sortedEmotions = jsonData.sort((a, b) => b.score - a.score);
     
-                // Iterate through the emotions in the data
-                jsonData.forEach((entry) => {
-                    if (entry.score > maxScore) {
-                        maxScore = entry.score;
-                        emotion = entry.label;
-                    }
-                });
-
-            })
-        
-    
-            // generate the response based on the emotion identified
-            switch (emotion) {
-                case "admiration":
-                    setAiResponse(getRandomResponse(admirationResponses));
-                    break;
-                case "admiration":
-                    setAiResponse(getRandomResponse(admirationResponses));
-                    break;
-                case "amusement":
-                    setAiResponse(getRandomResponse(amusementResponses));
-                    break;
-                case "anger":
-                    setAiResponse(getRandomResponse(angerResponses));
-                    break;
-                case "annoyance":
-                    setAiResponse(getRandomResponse(annoyanceResponses));
-                    break;
-                case "approval":
-                    setAiResponse(getRandomResponse(approvalResponses));
-                    break;
-                case "caring":
-                    setAiResponse(getRandomResponse(caringResponses));
-                    break;
-                case "confusion":
-                    setAiResponse(getRandomResponse(confusionResponses));
-                    break;
-                case "curiousity":
-                    setAiResponse(getRandomResponse(curiousityResponses));
-                    break;
-                case "desire":
-                    setAiResponse(getRandomResponse(desireResponses));
-                    break;
-                case "disappointment":
-                    setAiResponse(getRandomResponse(disappointmentResponses));
-                    break;
-    
-                case "disapproval":
-                    setAiResponse(getRandomResponse(disapprovalResponses));
-                    break;
-                case "disgust":
-                    setAiResponse(getRandomResponse(disgustResponses));
-                    break;
-                case "embarasement":
-                    setAiResponse(getRandomResponse(embarassmentResponses));
-                    break;
-                case "excitement":
-                    setAiResponse(getRandomResponse(excitementResponses));
-                    break;
-                case "fear":
-                    setAiResponse(getRandomResponse(fearResponses));
-                    break;
-                case "gratitude":
-                    setAiResponse(getRandomResponse(gratitudeResponses));
-                    break;
-                case "grief":
-                    setAiResponse(getRandomResponse(griefResponses));
-                    break;
-                case "joy":
-                    setAiResponse(getRandomResponse(joyResponses));
-                    break;
-                case "love":
-                    setAiResponse(getRandomResponse(loveResponses));
-                    break;
-                case "nervousness":
-                    setAiResponse(getRandomResponse(nervousnessResponses));
-                    break;
-    
-                case "optimism":
-                    setAiResponse(getRandomResponse(optimismResponses));
-                    break;
-                case "pride":
-                    setAiResponse(getRandomResponse(prideResponses));
-                    break;
-                case "realization":
-                    setAiResponse(getRandomResponse(realizationResponses));
-                    break;
-                case "relief":
-                    setAiResponse(getRandomResponse(reliefResponses));
-                    break;
-                case "remorse":
-                    setAiResponse(getRandomResponse(remorseResponses));
-                    break;
-                case "sadness":
-                    setAiResponse(getRandomResponse(sadnessResponses));
-                    break;
-                case "surprise":
-                    setAiResponse(getRandomResponse(surpriseResponses));
-                    break;
-                case "neutral":
-                    setAiResponse(getRandomResponse(neutralResponses));
-                    break;
-                default:
-                    setAiResponse("no emotion matched");
-            }
-    
-            setParagraphResult(emotion);
-            setParagraph('');
-            const prompt = `the user wrote : ${paragraph}
-            The user portrays the emotion/emotions: ${emotion}. Using the information provided above, respond, give advice, and symphatize witht he users
-            entry by using the sample responses below as a foundation. ${`${emotion}Responses`}. Make your final output personalized, no bias, and is related to
-            the emotions of the user. 
-            `;
-            console.log("prompt " + prompt);
-    
-            axios
-                .post('https://sentimetry-api.onrender.com/get-response', { text: prompt })
-                .then((res) => {
-                    console.log("Response of AI: ", res.data.response);
-                    setAiResponse(res.data.response);
-                    setLoadingParagraph(false);
+                const top3Emotions = sortedEmotions.slice(0, 3);
+                const emotions = []
+                top3Emotions.forEach((entry, index) => {
+                    
+                    emotions.push(entry.label)
                 })
-                .catch((err) => {
-                    console.error(err);
-                });
+
+                setEmotions(emotions)
+                console.log(top3Emotions)
+                // generate the response based on the emotion identified
+                switch (top3Emotions[0].label) {
+                    case "admiration":
+                        setAiResponse(getRandomResponse(admirationResponses));
+                        break;
+                    case "amusement":
+                        setAiResponse(getRandomResponse(amusementResponses));
+                        break;
+                    case "anger":
+                        setAiResponse(getRandomResponse(angerResponses));
+                        break;
+                    case "annoyance":
+                        setAiResponse(getRandomResponse(annoyanceResponses));
+                        break;
+                    case "approval":
+                        setAiResponse(getRandomResponse(approvalResponses));
+                        break;
+                    case "caring":
+                        setAiResponse(getRandomResponse(caringResponses));
+                        break;
+                    case "confusion":
+                        setAiResponse(getRandomResponse(confusionResponses));
+                        break;
+                    case "curiousity":
+                        setAiResponse(getRandomResponse(curiousityResponses));
+                        break;
+                    case "desire":
+                        setAiResponse(getRandomResponse(desireResponses));
+                        break;
+                    case "disappointment":
+                        setAiResponse(getRandomResponse(disappointmentResponses));
+                        break;
+        
+                    case "disapproval":
+                        setAiResponse(getRandomResponse(disapprovalResponses));
+                        break;
+                    case "disgust":
+                        setAiResponse(getRandomResponse(disgustResponses));
+                        break;
+                    case "embarasement":
+                        setAiResponse(getRandomResponse(embarassmentResponses));
+                        break;
+                    case "excitement":
+                        setAiResponse(getRandomResponse(excitementResponses));
+                        break;
+                    case "fear":
+                        setAiResponse(getRandomResponse(fearResponses));
+                        break;
+                    case "gratitude":
+                        setAiResponse(getRandomResponse(gratitudeResponses));
+                        break;
+                    case "grief":
+                        setAiResponse(getRandomResponse(griefResponses));
+                        break;
+                    case "joy":
+                        setAiResponse(getRandomResponse(joyResponses));
+                        break;
+                    case "love":
+                        setAiResponse(getRandomResponse(loveResponses));
+                        break;
+                    case "nervousness":
+                        setAiResponse(getRandomResponse(nervousnessResponses));
+                        break;
+        
+                    case "optimism":
+                        setAiResponse(getRandomResponse(optimismResponses));
+                        break;
+                    case "pride":
+                        setAiResponse(getRandomResponse(prideResponses));
+                        break;
+                    case "realization":
+                        setAiResponse(getRandomResponse(realizationResponses));
+                        break;
+                    case "relief":
+                        setAiResponse(getRandomResponse(reliefResponses));
+                        break;
+                    case "remorse":
+                        setAiResponse(getRandomResponse(remorseResponses));
+                        break;
+                    case "sadness":
+                        setAiResponse(getRandomResponse(sadnessResponses));
+                        break;
+                    case "surprise":
+                        setAiResponse(getRandomResponse(surpriseResponses));
+                        break;
+                    case "neutral":
+                        setAiResponse(getRandomResponse(neutralResponses));
+                        break;
+                    default:
+                        setAiResponse("no emotion matched");
+                }
+                setLoadingParagraph(false);
+                setParagraphResult(top3Emotions[0].label);
+                setParagraph('');
+                const prompt = `the user wrote : ${paragraph}
+                The user portrays the emotion/emotions: ${top3Emotions[0].label}. Using the information provided above, respond, give advice, and symphatize witht he users
+                entry by using the sample responses below as a foundation. ${`${top3Emotions[0].label}Responses`}. Make your final output personalized, no bias, and is related to
+                the emotions of the user. 
+                `;
+                console.log("prompt " + prompt);
+        
+                axios
+                    .post('https://sentimetry-api.onrender.com/get-response', { text: prompt })
+                    .then((res) => {
+                        console.log("Response of AI: ", res.data.response);
+                        setAiResponse(res.data.response);
+                    
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                    });
+        })
     };
     
 
@@ -396,7 +392,7 @@ const Home = () => {
                             </form>
                             <div>
                                 <h3 style={{color:'#BE912B'}} className='text-4xl font-bold mb-3'>Result</h3>
-                                <textarea value={loadingParagraph ? "Loading. . ." : "Your emotion is: " + paragraphResult + '\n' + aiResponse} readOnly={true} rows={10} cols={80} 
+                                <textarea value={loadingParagraph ? "Loading. . ." : "Your emotions are: " + emotions + '\n' + aiResponse} readOnly={true} rows={10} cols={80} 
                                         placeholder='Result' className='rounded-2xl bg-white p-4 w-full text-black text-xl'>
                                 </textarea>
                                 <h1>{aiResponse}</h1>
