@@ -75,7 +75,7 @@ const Home = () => {
           const emotionString = emotions.join(', ');
           setFinalAIResponse('');
 
-          const prompt = `My name is ${firstName.trim()} ${lastName.trim()}. These are my thoughts: ${paragraph.trim()}.
+          const prompt = `My name is ${firstName.trim()} ${lastName.trim()}. ${paragraph.trim()}.
           I feel ${emotionString.trim()} about it. Give me some advice using this another advice: 
           ${aiResponse.trim()}. You should be personal, sensitive, no bias, friendly, and very empathetic.`;
 
