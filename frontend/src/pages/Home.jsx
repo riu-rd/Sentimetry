@@ -3,7 +3,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { db } from '../../firebase.js';
 import axios from "axios";
 import predictEmotions from "../hooks/predictEmotions";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 
 import {
   admirationResponses,
@@ -44,13 +44,14 @@ const Home = () => {
     const [loadingParagraph, setLoadingParagraph] = useState(false);
     const [aiResponse, setAiResponse] = useState('');
     const [show, setShow] = useState('log')
-    const [emotions, setEmotions] = useState([])
-    const [showResult, setShowResult] = useState(false)
+    const [emotions, setEmotions] = useState([]);
+    const [showResult, setShowResult] = useState(false);
+    const [logs, setLogs] = useState([]);
 
     const auth = getAuth();
     const logsCollectionRef = collection(db, `users/${auth.currentUser?.uid}/logs`);
 
-    // On change
+    // On paragraph change
     const handleParagraphChange = (e) => {
     setParagraph(e.target.value);
     };
@@ -72,32 +73,32 @@ const Home = () => {
         setShowResult(false)
     };
 
+
+    // Get a random AI response
     function getRandomResponse(responses) {
     const randomIndex = Math.floor(Math.random() * responses.length);
     return responses[randomIndex];
     }
 
-    useEffect(() => {
-        if (aiResponse) {
-          const emotionString = emotions.join(', ');
-          addDoc(logsCollectionRef, {
-            log: paragraph,
-            emotions: emotionString,
-            response: aiResponse,
-            date: new Date().toISOString().split('T')[0],
+    // Retrieve the logs of the current user
+    const retrieveLogs = () => {
+        getDocs(logsCollectionRef)
+        .then((snapshot) => {
+          const current = [];
+          snapshot.forEach((doc) => { 
+            current.push(doc.data());
           })
-          .then(() => {
-            alert("Logged Successfully!")
-            setParagraph('');
+          // @ts-ignore
+          setLogs(current);
+          console.log("Logs retrieved successfully");
         })
-          .catch((err) => {
-            console.error(err);
-            alert("Logging Unsuccessful!");
-          });
-        }
-      }, [aiResponse]);
+        .catch((err) => {
+          console.error(err);
+        })
+    }
 
 
+    // When submit button is clicked
     const onSubmitParagraph = (e) => {
         e.preventDefault();
         setShowResult(true)
@@ -234,8 +235,40 @@ const Home = () => {
             })
     };
     
+    // When there is AI response, store the log
+    useEffect(() => {
+        if (aiResponse) {
+          const emotionString = emotions.join(', ');
+          addDoc(logsCollectionRef, {
+            log: paragraph,
+            emotions: emotionString,
+            response: aiResponse,
+            date: new Date().toISOString().split('T')[0],
+          })
+          .then(() => {
+            alert("Logged Successfully!")
+            retrieveLogs();
+            setParagraph('');
+        })
+          .catch((err) => {
+            console.error(err);
+            alert("Logging Unsuccessful!");
+          });
+        }
+      }, [aiResponse]);
 
+    // Retrieve logs upon page load
+    useEffect(() => {
+        retrieveLogs();
+    }, []);
 
+    // CONSOLE IF retrieveLogs is working
+    useEffect(() => {
+        console.log("Logs: ", logs)
+        logs.forEach((log, index) => {
+            console.log("Index: ", index, "Log: ",log.log)
+        })
+    }, [logs]);
 
   return (
     <div className="bg-background-green">
