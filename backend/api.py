@@ -1,18 +1,31 @@
+# Built-in
+import re
+import joblib
+from pathlib import Path
+
+# Dependencies for FastAPI
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import replicate
-import os
 
-# Class for Entry
-class Query(BaseModel):
-    text: str
+import tensorflow as tf
 
-# Setting up Replicate API
-os.environ["REPLICATE_API_TOKEN"] = "r8_dd0lbmTCsDU8xgQbA7KpJi7vkZUfCRf47JGSB"
-api = replicate.Client(api_token=os.environ["REPLICATE_API_TOKEN"])
+# Setup Paths
+lr_model_path = Path('./prod_models/emotion_classifier_pipe_lr.pkl')
+keras_model_path = Path('./prod_models/emo_modelV2')
 
+# Class for Text Body
+class Paragraph(BaseModel):
+    input: str
+
+# Load the Logistic Regression Model
+with open(lr_model_path, 'rb') as f:
+    lr_model = joblib.load(f)
+classes = lr_model.classes_
+
+# Load the Keras Model
+keras_model = tf.keras.models.load_model(keras_model_path, compile=True)
 
 # Start the app
 app = FastAPI()
@@ -36,21 +49,62 @@ async def docs():
     # return {"message":"Hello, this is the API server for Sentimetry. Go to /docs to test the APIs."} 
     return RedirectResponse(url="/docs")
 
-@app.post("/get-response")
-async def get_response(query : Query):
-    output = api.run(
-        "meta/llama-2-70b-chat:02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",
-        input={
-            "debug": False,
-            "top_k": 50,
-            "top_p": 1,
-            "prompt": f"{query.text}",
-            "temperature": 0.5,
-            "system_prompt": "You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information.",
-            "max_new_tokens": 500,
-            "min_new_tokens": -1
-        }
-    )
+@app.post("/logistic-regression")
+async def predict_emotions_lr(paragraph : Paragraph):
+    # Split the huge chunk of text into a list of strings
+    text_list = [text.strip() for text in re.split(r'[.!?;\n]', paragraph.input) if text.strip()]
 
-    return {"response": ''.join(list(output))}
+    # Create a list to store predictions per text
+    predictions_per_text = []
+    for text in text_list:
+      emotion = [{'label': label, 'score': score} for label, score in zip(lr_model.classes_, lr_model.predict_proba([text])[0])]
+      predictions_per_text.append(emotion)
 
+    # Create a dictionary to aggregate scores for each label
+    total = {}
+
+    # Iterate over each list and aggregate the scores
+    for prediction in predictions_per_text:
+        for emotion_dict in prediction:
+            label = emotion_dict['label']
+            score = emotion_dict['score']
+            total[label] = total.get(label, 0) + score
+
+    # Convert the dictionary to a list of dictionaries
+    result = [{"label": label, "score": score} for label, score in total.items()]
+
+    # Sort the result in descending order based on score
+    sorted_result = sorted(result, key=lambda x: x['score'], reverse=True)
+
+    return {"predictions": sorted_result}
+
+@app.post("/keras")
+async def predict_emotions_keras(paragraph : Paragraph):
+    # Split the huge chunk of text into a list of strings
+    text_list = [text.strip() for text in re.split(r'[.!?;\n]', paragraph.input) if text.strip()]
+
+    # Create a list to store predictions per text
+    predictions_per_text = []
+    for text in text_list:
+        scores = keras_model(tf.constant([text]))[0]
+        emotion = [{'label': label, 'score': score} for label, score in zip(classes, scores.numpy())]
+        print(emotion)
+        predictions_per_text.append(emotion)
+
+    # Create a dictionary to aggregate scores for each label
+    total = {}
+
+    # Iterate over each list and aggregate the scores
+    for prediction in predictions_per_text:
+        for emotion_dict in prediction:
+            label = emotion_dict['label']
+            score = emotion_dict['score']
+            total[label] = total.get(label, 0) + score
+
+    # Convert the dictionary to a list of dictionaries
+    result = [{"label": label, "score": score} for label, score in total.items()]
+
+    # Sort the result in descending order based on score
+    sorted_result = sorted(result, key=lambda x: x['score'], reverse=True)
+
+    return {"predictions": sorted_result}

@@ -17,7 +17,7 @@ const predictEmotions = async (paragraph) => {
             const emotion = response.data;
             predictionsPerText.push(emotion[0]);
         } catch (error) {
-            console.error('Error predicting emotions:', error);
+            console.error('Error predicting emotions using EmoRoBERTa:', error);
         }
     }
 
@@ -38,8 +38,14 @@ const predictEmotions = async (paragraph) => {
 
     // Sort the result in descending order
     const sortedResult = result.sort((a, b) => b.score - a.score);
+    
+    try {
 
-    return { predictions: sortedResult };
+        return { predictions: sortedResult };
+    } catch (error) {
+        console.error('Error predicting emotions using other models:', error);
+        return;
+    }
 };
 
 export default predictEmotions;
