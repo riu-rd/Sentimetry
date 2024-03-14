@@ -4,6 +4,14 @@ const API_TOKEN = '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';
 const API_URL = "https://api-inference.huggingface.co/models/arpanghoshal/EmoRoBERTa";
 const headers = {"Authorization": `Bearer ${API_TOKEN}`};
 
+const combineScores = (array1, array2) => {
+    const combined = [...array1, ...array2].reduce((acc, { label, score }) => {
+        acc[label] = (acc[label] || 0) + score;
+        return acc;
+    }, {});
+    return Object.entries(combined).map(([label, score]) => ({ label, score }));
+}
+
 const predictEmotions = async (paragraph) => {
     // Split the huge chunk of text into a string list
     const textList = paragraph.split(/[.!?;\n]/).map(text => text.trim()).filter(text => text);
@@ -35,13 +43,17 @@ const predictEmotions = async (paragraph) => {
 
     // Convert the Map to an array of objects
     const result = Array.from(total, ([label, score]) => ({ label, score }));
-
-    // Sort the result in descending order
-    const sortedResult = result.sort((a, b) => b.score - a.score);
     
     try {
+        const lr_result = await axios.post('https://sentimetry-api.onrender.com/logistic-regression', {
+            input: paragraph
+        });
+        const combinedPredictions = combineScores(lr_result.data.predictions, result);
 
-        return { predictions: sortedResult };
+        // Sort the result in descending order
+        const combinedResult = combinedPredictions.sort((a, b) => b.score - a.score);
+
+        return { predictions: combinedResult };
     } catch (error) {
         console.error('Error predicting emotions using other models:', error);
         return;
