@@ -94,11 +94,11 @@ const Login = (props) => {
                             className="text-2xl p-2 form-button rounded-xl bg-main-yellow hover:bg-yellow-500 w-full mt-4 mb-2">
                             Login
                         </button>
-                        <div className="flex m-0">
-                            <button className="bg-transparent text-blue-500 m-0" onClick={() => navigate('/forgot')}>
+                        <div className="flex m-0 space-x-20">
+                            <button className="bg-transparent text-blue-500 m-0 hover:underline underline-offset-2" onClick={() => navigate('/forgot')}>
                                 Forgot Password?
                             </button>
-                            <button className="bg-transparent text-blue-500 m-0" onClick={() => navigate('/register')}>
+                            <button className="bg-transparent text-blue-500 m-0 hover:underline underline-offset-2" onClick={() => navigate('/register')}>
                                 Don't have an account?
                             </button>
                         </div>

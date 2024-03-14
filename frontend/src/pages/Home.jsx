@@ -4,6 +4,7 @@ import { db } from '../../firebase.js';
 import axios from "axios";
 import predictEmotions from "../hooks/predictEmotions";
 import { collection, addDoc, getDocs } from "firebase/firestore";
+import '../index.css'
 
 import {
   admirationResponses,
@@ -47,6 +48,10 @@ const Home = () => {
     const [emotions, setEmotions] = useState([]);
     const [showResult, setShowResult] = useState(false);
     const [logs, setLogs] = useState([]);
+    const [openedLogEntry, setOpenedLogEntry] = useState('')
+    const [openedLogEmotions, setOpenedLogEmotions] = useState('')
+    const [openedLogResponse, setOpenedLogResponse] = useState('')
+    const [openedLogDate, setOpenedLogDate] = useState('')
 
     const auth = getAuth();
     const logsCollectionRef = collection(db, `users/${auth.currentUser?.uid}/logs`);
@@ -97,6 +102,14 @@ const Home = () => {
         })
     }
 
+    const handleOpenLogs = (entry, emotions, response, date) => {
+        setShow('history')
+        setOpenedLogEntry(entry)
+        setOpenedLogEmotions(emotions)
+        setOpenedLogResponse(response)
+        setOpenedLogDate(date)
+        console.log('im here')
+    }
 
     // When submit button is clicked
     const onSubmitParagraph = (e) => {
@@ -272,170 +285,30 @@ const Home = () => {
 
   return (
     <div className="bg-background-green">
-        <div className="w-screen m-0 p-4 ps-8 text-md bg-main-green">
+        <div className="w-screen m-0 p-4 ps-8 text-md bg-main-green justify-between flex">
             <h1 className="century-gothic">SentiMetry</h1>
+            <button onClick={handleLogout} className='clear m-0 text-white p-4 rounded-xl text-xl me-5 hover:text-yellow-200'>Log Out</button>
         </div>
-        <div className='p-10 px-28 h-screen'>
+        <div className='pt-10 px-28 h-screen'>
             <div className='mb-5'>
                 <h1 style={{color:'#BE912B'}} className='font-bold'>LOGS</h1>
             </div>
-            <div className='flex gap-10 h-4/5'>
+            <div className='flex gap-10 h-3/4'>
                 <div className='space-y-10 w-1/2 overflow-y-scroll'>
-                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'
-                            onClick={() => setShow('history')}>
-                        <h3>
-                            {/*place text here from database*/ }
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        </h3>
-                        <h4 className='text-end'>
-                            1/1/2024
-                            {/*place date here from database*/ }
-                        </h4>
-                    </div>
 
-                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
-                        <h3>
-                            {/*place text here from database*/ }
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        </h3>
-                        <h4 className='text-end'>
-                            1/1/2024
-                            {/*place date here from database*/ }
-                        </h4>
-                    </div>
-
-                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
-                        <h3>
-                            {/*place text here from database*/ }
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        </h3>
-                        <h4 className='text-end'>
-                            1/1/2024
-                            {/*place date here from database*/ }
-                        </h4>
-                    </div>
-
-                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
-                        <h3>
-                            {/*place text here from database*/ }
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        </h3>
-                        <h4 className='text-end'>
-                            1/1/2024
-                            {/*place date here from database*/ }
-                        </h4>
-                    </div>
-
-
-                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
-                        <h3>
-                            {/*place text here from database*/ }
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        </h3>
-                        <h4 className='text-end'>
-                            1/1/2024
-                            {/*place date here from database*/ }
-                        </h4>
-                    </div>
-
-                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
-                        <h3>
-                            {/*place text here from database*/ }
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        </h3>
-                        <h4 className='text-end'>
-                            1/1/2024
-                            {/*place date here from database*/ }
-                        </h4>
-                    </div>
-
-                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
-                        <h3>
-                            {/*place text here from database*/ }
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        </h3>
-                        <h4 className='text-end'>
-                            1/1/2024
-                            {/*place date here from database*/ }
-                        </h4>
-                    </div>
-
-                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
-                        <h3>
-                            {/*place text here from database*/ }
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        </h3>
-                        <h4 className='text-end'>
-                            1/1/2024
-                            {/*place date here from database*/ }
-                        </h4>
-                    </div>
-
-                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
-                        <h3>
-                            {/*place text here from database*/ }
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        </h3>
-                        <h4 className='text-end'>
-                            1/1/2024
-                            {/*place date here from database*/ }
-                        </h4>
-                    </div>
-
-                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
-                        <h3>
-                            {/*place text here from database*/ }
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        </h3>
-                        <h4 className='text-end'>
-                            1/1/2024
-                            {/*place date here from database*/ }
-                        </h4>
-                    </div>
-
-                    <div style={{backgroundColor:'#8DA290'}} className='rounded-2xl w-full p-4 h-max'>
-                        <h3>
-                            {/*place text here from database*/ }
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-                        </h3>
-                        <h4 className='text-end'>
-                            1/1/2024
-                            {/*place date here from database*/ }
-                        </h4>
-                    </div>
+                    {logs.map((item, index) => (
+                        <button key={index} className='rounded-2xl w-11/12 p-4 h-max text-start bg-main-green hover:bg-emerald-600'
+                            onClick={() => handleOpenLogs(item.log, item.emotions, item.response, item.date)}>
+                            <h1 className="text-xl font-bold text-yellow-200">Entry:</h1>
+                            <h3>{item.log}</h3>
+                            <h1 className="text-xl font-bold text-yellow-200">Emotions:</h1>
+                            <h3>{item.emotions}</h3>
+                            <h4 className='text-end'>
+                                {item.date}
+                            </h4>
+                        </button>
+                    ))}
+                    
                     
                 </div>
 
@@ -446,8 +319,7 @@ const Home = () => {
                             <form onSubmit={onSubmitParagraph}>
                                 <textarea rows={10} cols={50} placeholder='Enter a Paragraph' onChange={(e) => handleParagraphChange(e)} value={paragraph}
                                         className='rounded-2xl p-4 w-full bg-white mb-3 text-black text-xl'/>
-                                <button style={{backgroundColor:'#BE912B'}} type='submit'
-                                        className='font-bold text-2xl p-4 m-0 rounded-2xl'>Submit</button>
+                                <button type='submit'className='font-bold bg-sub-yellow text-2xl p-4 m-0 rounded-2xl hover:bg-yellow-500'>Submit</button>
                             </form>
                             <div>
                                 <h3 style={{color:'#BE912B'}} className='text-4xl font-bold mb-3'>Result</h3>
@@ -464,10 +336,23 @@ const Home = () => {
                 ) : (<> </>)}
 
                 {show == 'history' ? (  
-                    <div style={{backgroundColor:'#8DA290'}} className='w-full p-7 rounded-2xl'>
-                        <h1>Journal Entry:</h1>
-                        <h1>Emotion:</h1>
-                        <h1>Response:</h1>
+                    <div style={{backgroundColor:'#8DA290'}} className='w-full p-7 rounded-2xl space-y-5'>
+                        <div className="space-y-3">
+                            <h1 className="text-yellow-200 font-bold">Journal Entry:</h1>
+                            <h3 className="text-2xl ps-5">{openedLogEntry}</h3>
+                        </div>
+                       
+                        <div className="space-y-3">
+                            <h1 className="text-yellow-200 font-bold">Emotions:</h1>
+                            <h3 className="text-2xl ps-5">{openedLogEmotions}</h3>
+                        </div>
+
+                        <div className="space-y-3">
+                            <h1 className="text-yellow-200 font-bold">Response:</h1>
+                            <h3 className="text-2xl ps-5">{openedLogResponse}</h3>
+                        </div>
+                        
+                        <h3 className="text-end pt-4">{openedLogDate}</h3>
                     </div>
                 ) : (<> </>)}
 
@@ -477,14 +362,13 @@ const Home = () => {
 
             {show == 'log' ? (  
                     <div className='flex justify-end p-3 space-x-4'>
-                        <button onClick={handleLogout} className='clear m-0'>Log Out</button>
-                        <button onClick={handleClear} className='clear m-0'>Clear All Results</button>
+                        <button onClick={handleClear} className='clear m-0 bg-complement hover:bg-violet-900 p-4 rounded-xl'>Clear All Results</button>
                     </div>
             ) : (<> </>)}
 
             {show == 'history' ? (  
-                <div className='flex justify-end p-3 space-x-4'>
-                <button style={{background:'#BE912B'}} onClick={() => setShow('log')} className='clear m-0'>Done</button>
+                <div className='flex justify-end space-x-4'>
+                <button onClick={() => setShow('log')} className='clear m-0 bg-sub-yellow p-4 rounded-xl font-bold w-1/12 text-xl hover:bg-yellow-500'>Done</button>
             </div>
             ) : (<> </>)}
         </div>
