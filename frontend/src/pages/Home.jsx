@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
+import { db } from '../../firebase.js';
 import axios from "axios";
 import predictEmotions from "../hooks/predictEmotions";
+import { collection, addDoc } from "firebase/firestore";
 
 import {
   admirationResponses,
@@ -34,6 +36,7 @@ import {
   neutralResponses,
 } from "./emotionResponses";
 
+
 const Home = () => {
     // Declarations
     const [paragraph, setParagraph] = useState("");
@@ -45,6 +48,7 @@ const Home = () => {
     const [showResult, setShowResult] = useState(false)
 
     const auth = getAuth();
+    const logsCollectionRef = collection(db, `users/${auth.currentUser?.uid}/logs`);
 
     // On change
     const handleParagraphChange = (e) => {
@@ -73,6 +77,26 @@ const Home = () => {
     return responses[randomIndex];
     }
 
+    useEffect(() => {
+        if (aiResponse) {
+          const emotionString = emotions.join(', ');
+          addDoc(logsCollectionRef, {
+            log: paragraph,
+            emotions: emotionString,
+            response: aiResponse,
+            date: new Date().toISOString().split('T')[0],
+          })
+          .then(() => {
+            alert("Logged Successfully!")
+            setParagraph('');
+        })
+          .catch((err) => {
+            console.error(err);
+            alert("Logging Unsuccessful!");
+          });
+        }
+      }, [aiResponse]);
+
 
     const onSubmitParagraph = (e) => {
         e.preventDefault();
@@ -87,12 +111,15 @@ const Home = () => {
                 const sortedEmotions = jsonData.sort((a, b) => b.score - a.score);
     
                 const top3Emotions = sortedEmotions.slice(0, 3);
+                console.log(typeof(top3Emotions))
+                console.log(top3Emotions)
                 const emotions = []
                 top3Emotions.forEach((entry, index) => {
                     
                     emotions.push(entry.label)
                 })
 
+                // @ts-ignore
                 setEmotions(emotions)
                 console.log(top3Emotions)
                 // generate the response based on the emotion identified
@@ -188,7 +215,7 @@ const Home = () => {
                 }
                 setLoadingParagraph(false);
                 setParagraphResult(top3Emotions[0].label);
-                setParagraph('');
+                
                 const prompt = `the user wrote : ${paragraph}
                 The user portrays the emotion/emotions: ${top3Emotions[0].label}. Using the information provided above, respond, give advice, and symphatize witht he users
                 entry by using the sample responses below as a foundation. ${`${top3Emotions[0].label}Responses`}. Make your final output personalized, no bias, and is related to
@@ -196,17 +223,15 @@ const Home = () => {
                 `;
                 console.log("prompt " + prompt);
         
-                axios
-                    .post('https://sentimetry-api.onrender.com/get-response', { text: prompt })
-                    .then((res) => {
-                        console.log("Response of AI: ", res.data.response);
-                        setAiResponse(res.data.response);
-                    
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                    });
-        })
+                // axios.post('https://sentimetry-api.onrender.com/get-response', { text: prompt })
+                // .then((res) => {
+                //     console.log("Response of AI: ", res.data.response);
+                //     setAiResponse(res.data.response);
+                // })
+                // .catch((err) => {
+                //     console.error(err);
+                // });
+            })
     };
     
 

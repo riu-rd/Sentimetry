@@ -1,7 +1,9 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from '../../firebase.js';
 import "../tailwind.css"; // Import Tailwind CSS file
 
 const Register = ( props, {user} ) => {
@@ -19,6 +21,18 @@ const Register = ( props, {user} ) => {
     lastName: "",
     confirmPassword: "",
   });
+  const usersCollectionRef = collection(db, "users");
+
+  // Clear Credentials
+  const clearCredentials = () => {
+    setCredentials({
+        email: "",
+        password: "",
+        firstName: "",
+        lastName: "",
+        confirmPassword: "",
+      });
+  }
 
   // When credential values change
   const handleChange = (e) => {
@@ -29,6 +43,7 @@ const Register = ( props, {user} ) => {
   const handleRegister = (e) => {
     e.preventDefault();
 
+    console.log(credentials)
     if (credentials.password !== credentials.confirmPassword) {
       alert("Passwords do not match");
       return;
@@ -41,12 +56,24 @@ const Register = ( props, {user} ) => {
       credentials.password
     )
       .then((userCredential) => {
-        const userEmail = userCredential.user.email;
-        alert(`Successfully Created Account for ${userEmail}`);
+        const userDocRef = doc(usersCollectionRef, `${userCredential.user.uid}`)
+        setDoc(userDocRef, {
+            firstName: credentials.firstName,
+            lastName: credentials.lastName
+        })
+        .then(() => {
+            alert(`Firestore Registration Successful`);
+            clearCredentials();
+        })
+        .catch((err) => {
+            alert("Firestore Registration Error");
+            console.error(err);
+        });
       })
       .catch((error) => {
-        alert("Error Creating Account");
+        alert("Authentication Error");
         console.error(error);
+        clearCredentials();
       });
   };
 
@@ -158,7 +185,7 @@ const Register = ( props, {user} ) => {
                 </form>   
 
                 <div className="mx-auto text-center">
-                    <button to="/" className="text-blue-500 m-0 bg-transparent" onClick={() => navigate('/login')}>
+                    <button className="text-blue-500 m-0 bg-transparent" onClick={() => navigate('/login')}>
                         Already have an Account?
                     </button>
                 </div>
