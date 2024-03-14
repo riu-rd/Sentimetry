@@ -2,6 +2,7 @@
 import re
 import joblib
 from pathlib import Path
+import urllib.request
 
 # Dependencies for FastAPI
 from fastapi import FastAPI
@@ -10,19 +11,23 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 import tensorflow as tf
+from retvec.tf import RETVecTokenizer
 
 # Setup Paths
 lr_model_path = Path('./prod_models/emotion_classifier_pipe_lr.pkl')
-keras_model_path = Path('./prod_models/emo_modelV2')
+keras_model_path = Path('./prod_models/emo_modelV2.h5')
 
 # Class for Text Body
 class Paragraph(BaseModel):
     input: str
 
+# Classes 
+classes = urllib.request.urlopen('https://raw.githubusercontent.com/google-research/google-research'
+'/master/goemotions/data/emotions.txt').read().decode('utf8').split('\n')
+
 # Load the Logistic Regression Model
 with open(lr_model_path, 'rb') as f:
     lr_model = joblib.load(f)
-classes = lr_model.classes_
 
 # Load the Keras Model
 keras_model = tf.keras.models.load_model(keras_model_path, compile=True)

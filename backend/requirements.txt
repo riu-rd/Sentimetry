@@ -3,3 +3,4 @@ uvicorn
 joblib
 tensorflow
 scikit-learn
+retvec
