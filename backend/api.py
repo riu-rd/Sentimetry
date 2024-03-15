@@ -3,6 +3,7 @@ import re
 import joblib
 from pathlib import Path
 import urllib.request
+import os
 
 # Dependencies for FastAPI
 from fastapi import FastAPI
@@ -10,11 +11,15 @@ from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-# import tensorflow as tf
+import keras
+import tensorflow as tf
+
+# Set Environment
+os.environ["KERAS_BACKEND"] = "tensorflow"
 
 # Setup Paths
 lr_model_path = Path('./prod_models/emotion_classifier_pipe_lr.pkl')
-keras_model_path = Path('./prod_models/emo_modelV2.h5')
+keras_model_path = Path('./prod_models/emo_modelV2_tf')
 
 # Class for Text Body
 class Paragraph(BaseModel):
@@ -29,7 +34,10 @@ with open(lr_model_path, 'rb') as f:
     lr_model = joblib.load(f)
 
 # Load the Keras Model
-# keras_model = tf.keras.models.load_model(keras_model_path, compile=True)
+tfsmlayer = keras.layers.TFSMLayer(keras_model_path, call_endpoint="serving_default")
+inputs = tf.keras.Input(shape=(1,), dtype=tf.string)
+outputs = tfsmlayer(inputs)
+keras_model = tf.keras.Model(inputs, outputs)
 
 # Start the app
 app = FastAPI()
@@ -82,33 +90,33 @@ async def predict_emotions_lr(paragraph : Paragraph):
 
     return {"predictions": sorted_result}
 
-# @app.post("/keras")
-# async def predict_emotions_keras(paragraph : Paragraph):
-#     # Split the huge chunk of text into a list of strings
-#     text_list = [text.strip() for text in re.split(r'[.!?;\n]', paragraph.input) if text.strip()]
+@app.post("/keras")
+async def predict_emotions_keras(paragraph : Paragraph):
+    # Split the huge chunk of text into a list of strings
+    text_list = [text.strip() for text in re.split(r'[.!?;\n]', paragraph.input) if text.strip()]
 
-#     # Create a list to store predictions per text
-#     predictions_per_text = []
-#     for text in text_list:
-#         scores = keras_model(tf.constant([text]))[0]
-#         emotion = [{'label': label, 'score': score} for label, score in zip(classes, scores.numpy())]
-#         print(emotion)
-#         predictions_per_text.append(emotion)
+    # Create a list to store predictions per text
+    predictions_per_text = []
+    for text in text_list:
+        scores = keras_model(tf.constant([text]))['dense_1'][0]
+        emotion = [{'label': label, 'score': score} for label, score in zip(classes, scores.numpy())]
+        print(emotion)
+        predictions_per_text.append(emotion)
 
-#     # Create a dictionary to aggregate scores for each label
-#     total = {}
+    # Create a dictionary to aggregate scores for each label
+    total = {}
 
-#     # Iterate over each list and aggregate the scores
-#     for prediction in predictions_per_text:
-#         for emotion_dict in prediction:
-#             label = emotion_dict['label']
-#             score = emotion_dict['score']
-#             total[label] = total.get(label, 0) + score
+    # Iterate over each list and aggregate the scores
+    for prediction in predictions_per_text:
+        for emotion_dict in prediction:
+            label = emotion_dict['label']
+            score = emotion_dict['score']
+            total[label] = total.get(label, 0) + score
 
-#     # Convert the dictionary to a list of dictionaries
-#     result = [{"label": label, "score": score} for label, score in total.items()]
+    # Convert the dictionary to a list of dictionaries
+    result = [{"label": label, "score": score} for label, score in total.items()]
 
-#     # Sort the result in descending order based on score
-#     sorted_result = sorted(result, key=lambda x: x['score'], reverse=True)
+    # Sort the result in descending order based on score
+    sorted_result = sorted(result, key=lambda x: x['score'], reverse=True)
 
-#     return {"predictions": sorted_result}
+    return {"predictions": sorted_result}

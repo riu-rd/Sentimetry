@@ -1,6 +1,6 @@
-fastapi
-uvicorn
-joblib
-tensorflow
-scikit-learn
-retvec
+fastapi>=0.110.0
+uvicorn>=0.28.0
+joblib>=1.3.2
+scikit-learn>=1.4.0
+retvec>=1.0.1
+tensorflow>=2.16.1
