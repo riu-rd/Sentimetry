@@ -16,28 +16,25 @@ import tensorflow as tf
 
 # Set Environment
 os.environ["KERAS_BACKEND"] = "tensorflow"
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
 
 # Setup Paths
 lr_model_path = Path('./prod_models/emotion_classifier_pipe_lr.pkl')
-keras_model_path = Path('./prod_models/emo_modelV2_tf')
+keras_model_path = Path('./prod_models/emo_modelV2.keras')
 
 # Class for Text Body
 class Paragraph(BaseModel):
     input: str
 
 # Classes 
-classes = urllib.request.urlopen('https://raw.githubusercontent.com/google-research/google-research'
-'/master/goemotions/data/emotions.txt').read().decode('utf8').split('\n')
+classes = ['admiration', 'amusement', 'anger', 'annoyance', 'approval', 'caring', 'confusion', 'curiosity', 'desire', 'disappointment', 'disapproval', 'disgust', 'embarrassment', 'excitement', 'fear', 'gratitude', 'grief', 'joy', 'love', 'nervousness', 'optimism', 'pride', 'realization', 'relief', 'remorse', 'sadness', 'surprise', 'neutral']
 
 # Load the Logistic Regression Model
 with open(lr_model_path, 'rb') as f:
     lr_model = joblib.load(f)
 
 # Load the Keras Model
-tfsmlayer = keras.layers.TFSMLayer(keras_model_path, call_endpoint="serving_default")
-inputs = tf.keras.Input(shape=(1,), dtype=tf.string)
-outputs = tfsmlayer(inputs)
-keras_model = tf.keras.Model(inputs, outputs)
+keras_model = keras.models.load_model(str(keras_model_path), compile=True)
 
 # Start the app
 app = FastAPI()
