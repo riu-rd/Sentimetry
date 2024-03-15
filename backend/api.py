@@ -19,7 +19,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 
 # Setup Paths
 lr_model_path = Path('./prod_models/emotion_classifier_pipe_lr.pkl')
-keras_model_path = Path('./prod_models/emo_modelV2_tf.keras')
+keras_model_path = Path('./prod_models/emo_modelV2.keras')
 
 # Class for Text Body
 class Paragraph(BaseModel):
