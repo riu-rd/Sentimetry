@@ -3,6 +3,7 @@ import re
 import joblib
 from pathlib import Path
 import os
+import uvicorn
 
 # Dependencies for FastAPI
 from fastapi import FastAPI
@@ -19,7 +20,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
 
 # Setup Paths
 lr_model_path = Path('./prod_models/emotion_classifier_pipe_lr.pkl')
-keras_model_path = Path('./prod_models/emo_modelV2.keras')
+keras_model_path = Path('./prod_models/emo_modelV2_tf')
 
 # Class for Text Body
 class Paragraph(BaseModel):
@@ -33,7 +34,10 @@ with open(lr_model_path, 'rb') as f:
     lr_model = joblib.load(f)
 
 # Load the Keras Model
-keras_model = keras.models.load_model(str(keras_model_path), compile=True)
+tfsmlayer = keras.layers.TFSMLayer(str(keras_model_path), call_endpoint="serving_default")
+inputs = keras.Input(shape=(1,), dtype=tf.string)
+outputs = tfsmlayer(inputs)
+keras_model = keras.Model(inputs, outputs)
 
 # Start the app
 app = FastAPI()
@@ -116,3 +120,6 @@ async def predict_emotions_keras(paragraph : Paragraph):
     sorted_result = sorted(result, key=lambda x: x['score'], reverse=True)
 
     return {"predictions": sorted_result}
+
+# if __name__ == "__main__":
+#   uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)

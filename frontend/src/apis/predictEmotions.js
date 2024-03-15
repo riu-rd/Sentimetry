@@ -45,13 +45,24 @@ const predictEmotions = async (paragraph) => {
     const result = Array.from(total, ([label, score]) => ({ label, score }));
     
     try {
-        const lr_result = await axios.post('https://sentimetry-api.onrender.com/logistic-regression', {
+        const lr_result = await axios.post('https://riu-rd-sentimetry-api.hf.space/logistic-regression', {
             input: paragraph
         });
-        const combinedPredictions = combineScores(lr_result.data.predictions, result);
+
+        const keras_result = await axios.post('https://riu-rd-sentimetry-api.hf.space/keras', {
+            input: paragraph
+        });
+        
+        const combinedLogisticAndKeras = combineScores(lr_result.data.predictions, keras_result.data.predictions);
+        const finalCombine = combineScores(combinedLogisticAndKeras, result);
 
         // Sort the result in descending order
-        const combinedResult = combinedPredictions.sort((a, b) => b.score - a.score);
+        const combinedResult = finalCombine.sort((a, b) => b.score - a.score);
+
+        console.log("LR RESULT: ", lr_result.data.predictions)
+        console.log("KERAS RESULT: ", keras_result.data.predictions)
+        console.log("MAIN RESULT: ", result)
+        console.log("FINAL COMBINE: ", combinedResult)
 
         return { predictions: combinedResult };
     } catch (error) {

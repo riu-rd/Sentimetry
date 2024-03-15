@@ -104,15 +104,6 @@ const Home = () => {
         }
     }, [aiResponse]);
 
-    // CONSOLE IF retrieveLogs is working
-    useEffect(() => {
-        console.log("Logs: ", logs)
-        logs.forEach((log, index) => {
-            // @ts-ignore
-            console.log("Index: ", index, "Log: ",log.log)
-        })
-    }, [logs]);
-
     // On paragraph change
     const handleParagraphChange = (e) => {
     setParagraph(e.target.value);
