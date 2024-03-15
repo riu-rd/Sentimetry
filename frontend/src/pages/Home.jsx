@@ -158,6 +158,7 @@ const Home = () => {
         predictEmotions(paragraph)
             .then((response) => {
                 setParagraphResult('');
+                // @ts-ignore
                 const jsonData = response.predictions; // Access the 'predictions' property
     
                 // Initialize variables for the emotion with the highest score

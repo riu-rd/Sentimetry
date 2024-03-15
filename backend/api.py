@@ -53,12 +53,7 @@ app.add_middleware(
 
 # APIs
 @app.get("/")
-async def welcome():
-    return {"message":"Hello, this is the API server for Sentimetry. Go to /docs to test the APIs."}
-
-@app.get("/d")
 async def docs():
-    # return {"message":"Hello, this is the API server for Sentimetry. Go to /docs to test the APIs."} 
     return RedirectResponse(url="/docs")
 
 @app.post("/logistic-regression")
