@@ -22,12 +22,6 @@ WORKDIR $HOME/app
 # Copy the application code and model files
 COPY --chown=user . $HOME/app/
 
-# Ensure the directory for the SavedModel exists
-RUN mkdir -p prod_models/emo_model_tf
-
-# Specify the correct path to the SavedModel
-ENV SAVED_MODEL_PATH=$HOME/app/prod_models/emo_model_tf
-
 # Expose the port the FastAPI app runs on
 EXPOSE 7860
 
