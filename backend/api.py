@@ -33,10 +33,7 @@ with open(lr_model_path, 'rb') as f:
     lr_model = joblib.load(f)
 
 # Load the Keras Model
-tfsmlayer = keras.layers.TFSMLayer(str(keras_model_path), call_endpoint="serving_default")
-inputs = keras.Input(shape=(1,), dtype=tf.string)
-outputs = tfsmlayer(inputs)
-keras_model = keras.Model(inputs, outputs)
+keras_model = keras.models.load_model(str(keras_model_path), compile=True)
 
 # Start the app
 app = FastAPI()
