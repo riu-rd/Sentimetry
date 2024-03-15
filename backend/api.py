@@ -2,7 +2,6 @@
 import re
 import joblib
 from pathlib import Path
-import urllib.request
 import os
 
 # Dependencies for FastAPI
