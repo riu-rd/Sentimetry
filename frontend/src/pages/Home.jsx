@@ -1,40 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { db } from '../../firebase.js';
-import axios from "axios";
-import '../index.css'
 import predictEmotions from "../apis/predictEmotions";
 import generateResponse from "../apis/generateResponse.js";
 import { collection, addDoc, getDocs, getDoc, doc } from "firebase/firestore";
+import '../index.css'
 
 import {
-  admirationResponses,
-  amusementResponses,
-  angerResponses,
-  annoyanceResponses,
-  approvalResponses,
-  caringResponses,
-  confusionResponses,
-  curiousityResponses,
-  desireResponses,
-  disappointmentResponses,
-  disapprovalResponses,
-  disgustResponses,
-  embarassmentResponses,
-  excitementResponses,
-  fearResponses,
-  gratitudeResponses,
-  griefResponses,
-  joyResponses,
-  loveResponses,
-  nervousnessResponses,
-  optimismResponses,
-  prideResponses,
-  realizationResponses,
-  reliefResponses,
-  remorseResponses,
-  sadnessResponses,
-  surpriseResponses,
+  admirationResponses, amusementResponses, angerResponses,
+  annoyanceResponses, approvalResponses, caringResponses,
+  confusionResponses, curiousityResponses, desireResponses,
+  disappointmentResponses, disapprovalResponses, disgustResponses,
+  embarassmentResponses, excitementResponses, fearResponses,
+  gratitudeResponses, griefResponses, joyResponses,
+  loveResponses, nervousnessResponses, optimismResponses,
+  prideResponses, realizationResponses, reliefResponses,
+  remorseResponses, sadnessResponses, surpriseResponses,
   neutralResponses,
 } from "./emotionResponses";
 
@@ -42,7 +23,6 @@ import {
 const Home = () => {
     // Declarations
     const [paragraph, setParagraph] = useState("");
-    const [paragraphResult, setParagraphResult] = useState("");
     const [loadingParagraph, setLoadingParagraph] = useState(false);
     const [aiResponse, setAiResponse] = useState('');
     const [finalAIResponse, setFinalAIResponse] = useState('');
@@ -57,6 +37,7 @@ const Home = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
+    // Retrieve data from database
     const auth = getAuth();
     const logsCollectionRef = collection(db, `users/${auth.currentUser?.uid}/logs`);
     const userDocsRef = doc(db, "users", `${auth.currentUser?.uid}`);
@@ -97,7 +78,6 @@ const Home = () => {
                 .then(() => {
                   alert("Logged Successfully!")
                   retrieveLogs();
-                  setParagraph('');
                 })
                 .catch((err) => {
                   console.error(err);
@@ -111,7 +91,7 @@ const Home = () => {
 
     // On paragraph change
     const handleParagraphChange = (e) => {
-    setParagraph(e.target.value);
+        setParagraph(e.target.value);
     };
 
     // Log out
@@ -154,6 +134,7 @@ const Home = () => {
         })
     }
 
+    // Display the data of the clicked entry
     const handleOpenLogs = (entry, emotions, response, date) => {
         setShow('history')
         setOpenedLogEntry(entry)
@@ -170,26 +151,21 @@ const Home = () => {
         setLoadingParagraph(true);
         predictEmotions(paragraph)
             .then((response) => {
-                setParagraphResult('');
-                // @ts-ignore
-                const jsonData = response.predictions; // Access the 'predictions' property
-    
-                // Initialize variables for the emotion with the highest score
+                const jsonData = response.predictions; 
+                // Sort the emotions
                 const sortedEmotions = jsonData.sort((a, b) => b.score - a.score);
-    
+
+                // Get the top 3 emotions
                 const top3Emotions = sortedEmotions.slice(0, 3);
-                console.log(typeof(top3Emotions))
-                console.log(top3Emotions)
+
+                // Get only the emotions from the array of objects
                 const emotions = []
                 top3Emotions.forEach((entry, index) => {
-                    
                     emotions.push(entry.label)
                 })
-
-                // @ts-ignore
                 setEmotions(emotions)
-                console.log(top3Emotions)
-                // generate the response based on the emotion identified
+
+                // Generate the response based on the emotion identified
                 switch (top3Emotions[0].label) {
                     case "admiration":
                         setAiResponse(getRandomResponse(admirationResponses));
@@ -281,12 +257,13 @@ const Home = () => {
                         setAiResponse("no emotion matched");
                 }
                 setLoadingParagraph(false);
-                setParagraphResult(top3Emotions[0].label);
             })
     };
 
   return (
     <div className="bg-background-green">
+        
+
         <div className="w-screen m-0 p-4 ps-8 text-md bg-main-green justify-between flex">
             <h1 className="century-gothic">SentiMetry</h1>
             <button onClick={handleLogout} className='clear m-0 text-white p-4 rounded-xl text-xl me-5 hover:text-yellow-200'>Log Out</button>
@@ -296,15 +273,21 @@ const Home = () => {
                 <h1 style={{color:'#BE912B'}} className='font-bold'>LOGS</h1>
             </div>
             <div className='flex gap-10 h-3/4'>
-                <div className='space-y-10 w-1/2 overflow-y-scroll'>
+                <div className='space-y-5 w-1/2 overflow-y-scroll'>
 
                     {logs.map((item, index) => (
-                        <button key={index} className='rounded-2xl w-11/12 p-4 h-max text-start bg-main-green hover:bg-emerald-600'
+                        <button key={index} className='rounded-2xl w-11/12 p-4 h-max text-start bg-main-green hover:bg-emerald-600 space-y-4'
                             onClick={() => handleOpenLogs(item.log, item.emotions, item.response, item.date)}>
-                            <h1 className="text-xl font-bold text-yellow-200">Entry:</h1>
-                            <h3>{item.log}</h3>
-                            <h1 className="text-xl font-bold text-yellow-200">Emotions:</h1>
-                            <h3>{item.emotions}</h3>
+                            <div>
+                                <h1 className="text-2xl font-bold text-yellow-200">Entry:</h1>
+                                <h3 className="text-xl">{item.log}</h3>
+                            </div>
+                           
+                           <div>
+                                <h1 className="text-2xl font-bold text-yellow-200">Emotions:</h1>
+                                <h3 className="text-xl">{item.emotions}</h3>
+                           </div>
+                    
                             <h4 className='text-end'>
                                 {item.date}
                             </h4>
@@ -318,7 +301,7 @@ const Home = () => {
                     <div className='w-full'>
                         <h2 style={{color:'#BE912B'}} className='text-4xl font-bold mb-3'>How Are You Feeling?</h2>
                         <fieldset className='space-y-6'>
-                            <form onSubmit={onSubmitParagraph}>
+                            <form onSubmit={(e) => onSubmitParagraph(e)}>
                                 <textarea rows={10} cols={50} placeholder='Enter a Paragraph' onChange={(e) => handleParagraphChange(e)} value={paragraph}
                                         className='rounded-2xl p-4 w-full bg-white mb-3 text-black text-xl'/>
                                 <button type='submit'className='font-bold bg-sub-yellow text-2xl p-4 m-0 rounded-2xl hover:bg-yellow-500'>Submit</button>
@@ -338,23 +321,27 @@ const Home = () => {
                 ) : (<> </>)}
 
                 {show == 'history' ? (  
-                    <div style={{backgroundColor:'#8DA290'}} className='w-full p-7 rounded-2xl space-y-5'>
-                        <div className="space-y-3">
-                            <h1 className="text-yellow-200 font-bold">Journal Entry:</h1>
-                            <h3 className="text-2xl ps-5">{openedLogEntry}</h3>
-                        </div>
-                       
-                        <div className="space-y-3">
-                            <h1 className="text-yellow-200 font-bold">Emotions:</h1>
-                            <h3 className="text-2xl ps-5">{openedLogEmotions}</h3>
+                    <div className='w-full rounded-2xl gap-5 grid grid-cols-3'>
+                        <div className="bg-main-green p-6 col-span-2 rounded-xl h-full">
+                            <div className="space-y-3">
+                                <h1 className="text-yellow-200 font-bold">Journal Entry:</h1>
+                                <h3 className="text-2xl ps-5">{openedLogEntry}</h3>
+                            </div>
+                            
+                            <h3 className="text-end pt-4">{openedLogDate}</h3>
                         </div>
 
-                        <div className="space-y-3">
-                            <h1 className="text-yellow-200 font-bold">Response:</h1>
-                            <h3 className="text-2xl ps-5">{openedLogResponse}</h3>
+                        <div className="space-y-5 grid grid-rows-4">
+                            <div className="space-y-3 bg-main-green p-6 rounded-xl row-span-1" >
+                                <h1 className="text-yellow-200 font-bold">Emotions:</h1>
+                                <h3 className="text-2xl ps-5">{openedLogEmotions}</h3>
+                            </div>
+
+                            <div className="space-y-3 bg-main-green p-6 rounded-xl row-span-3">
+                                <h1 className="text-yellow-200 font-bold">Response:</h1>
+                                <h3 className="text-2xl ps-5">{openedLogResponse}</h3>
+                            </div>
                         </div>
-                        
-                        <h3 className="text-end pt-4">{openedLogDate}</h3>
                     </div>
                 ) : (<> </>)}
 
@@ -364,13 +351,13 @@ const Home = () => {
 
             {show == 'log' ? (  
                     <div className='flex justify-end p-3 space-x-4'>
-                        <button onClick={handleClear} className='clear m-0 bg-complement hover:bg-violet-900 p-4 rounded-xl'>Clear All Results</button>
+                        <button onClick={handleClear} className='clear m-0 bg-complement hover:bg-violet-900 p-4 text-lg rounded-xl'>Clear All Results</button>
                     </div>
             ) : (<> </>)}
 
             {show == 'history' ? (  
                 <div className='flex justify-end space-x-4'>
-                <button onClick={() => setShow('log')} className='clear m-0 bg-sub-yellow p-4 rounded-xl font-bold w-1/12 text-xl hover:bg-yellow-500'>Done</button>
+                <button onClick={() => setShow('log')} className='clear m-0 bg-sub-yellow p-4 rounded-xl font-bold w-1/12 text-xl hover:bg-yellow-500 mt-3'>Done</button>
             </div>
             ) : (<> </>)}
         </div>

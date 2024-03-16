@@ -1,45 +1,114 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import "../tailwind.css"; // Import Tailwind CSS file
-import ForgotPasswordLink from "../components/ForgotPasswordLink";
 
-const Login = (props) => {
-  // Check if user is already authenticated
-  const navigate = useNavigate();
+const Login = () => {
+    // Check if user is already authenticated
+    const navigate = useNavigate();
 
-  // Declarations
-  const [credentials, setCredentials] = useState({ email: "", password: "" });
+    // Declarations
+    const [credentials, setCredentials] = useState({ email: "", password: "" });
+    const [showModal, setShowModal] = useState(false);
+    const [email, setEmail] = useState('')
 
-  // When credential values change
-  const handleChange = (e) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value });
-  };
+    // When credential values change
+    const handleChange = (e) => {
+        setCredentials({ ...credentials, [e.target.name]: e.target.value });
+    };
 
-  // When log in button is clicked
-  const handleLogin = async (e) => {
-    e.preventDefault();
+    // When log in button is clicked
+    const handleLogin = async (e) => {
+        e.preventDefault();
 
-    const auth = getAuth();
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        credentials.email,
-        credentials.password
-      );
+        const auth = getAuth();
+        try {
+        const userCredential = await signInWithEmailAndPassword(
+            auth,
+            credentials.email,
+            credentials.password
+        );
 
-      const userEmail = userCredential.user.email;
-      alert(`Successfully Logged in: ${userEmail}`);
+        const userEmail = userCredential.user.email;
+        alert(`Successfully Logged in: ${userEmail}`);
 
-      // Redirect to "/home" after successful login
-      navigate("/home");
-    } catch (error) {
-      alert("Error Logging In");
-      console.error(error);
+        // Redirect to "/home" after successful login
+        navigate("/home");
+        } catch (error) {
+        alert("Error Logging In");
+        console.error(error);
+        }
+    };
+
+    const resetPassword = (email) => {
+        const auth = getAuth();
+        sendPasswordResetEmail(auth, email)
+        .then(() => {
+            alert('Password reset email sent!')
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode + " " + errorMessage)
+        });
     }
-  };
+
+    const handleForgotPasswordSubmit = () => {
+        setShowModal(false)
+        resetPassword(email)
+    }
+
   return (
     <section className="flex items-center justify-center">
+        <div>
+            {showModal ? (
+                <>
+                <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+                    <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                        {/*content*/}
+                        <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                            {/*header*/}
+                            <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+                                <h3 className="text-3xl font-semibold text-black">
+                                    Reset Password
+                                </h3>
+                                <button
+                                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                                    onClick={() => setShowModal(false)}
+                                >
+                                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none"> × </span>
+                                </button>
+                            </div>
+                            {/*body*/}
+                            <div className="relative p-6 flex-auto text-black space-y-3">
+                                <h1 className="text-xl">Enter your email:</h1>
+                                <input type="email" className="rounded-lg bg-slate-200 w-96 p-2" onChange={(e) => setEmail(e.target.value)}/>
+                            </div>
+                            {/*footer*/}
+                            <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                                <button
+                                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                    type="button"
+                                    onClick={() => setShowModal(false)}
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    className="bg-yellow-500 text-white active:bg-yellow-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                    type="button"
+                                    onClick={() => handleForgotPasswordSubmit()}
+                                >
+                                    Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+                </>
+            ) : null}
+        </div>
+
         <div>
             <div className="text-center text-main-yellow">
                 <h1 className="drop-shadow-xl text-9xl century-gothic font-extrabold mx-8 my-4 mt-">
@@ -95,7 +164,7 @@ const Login = (props) => {
                             Login
                         </button>
                         <div className="flex m-0 space-x-20">
-                            <button className="bg-transparent text-blue-500 m-0 hover:underline underline-offset-2" onClick={() => navigate('/forgot')}>
+                            <button className="bg-transparent text-blue-500 m-0 hover:underline underline-offset-2" onClick={() => setShowModal(true)}>
                                 Forgot Password?
                             </button>
                             <button className="bg-transparent text-blue-500 m-0 hover:underline underline-offset-2" onClick={() => navigate('/register')}>
