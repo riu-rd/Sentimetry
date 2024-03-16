@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
 import { db } from '../../firebase.js';
 import axios from "axios";
-import predictEmotions from "../hooks/predictEmotions";
-import { collection, addDoc, getDocs } from "firebase/firestore";
 import '../index.css'
+import predictEmotions from "../apis/predictEmotions";
+import generateResponse from "../apis/generateResponse.js";
+import { collection, addDoc, getDocs, getDoc, doc } from "firebase/firestore";
 
 import {
   admirationResponses,
@@ -44,6 +45,7 @@ const Home = () => {
     const [paragraphResult, setParagraphResult] = useState("");
     const [loadingParagraph, setLoadingParagraph] = useState(false);
     const [aiResponse, setAiResponse] = useState('');
+    const [finalAIResponse, setFinalAIResponse] = useState('');
     const [show, setShow] = useState('log')
     const [emotions, setEmotions] = useState([]);
     const [showResult, setShowResult] = useState(false);
@@ -52,9 +54,60 @@ const Home = () => {
     const [openedLogEmotions, setOpenedLogEmotions] = useState('')
     const [openedLogResponse, setOpenedLogResponse] = useState('')
     const [openedLogDate, setOpenedLogDate] = useState('')
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
 
     const auth = getAuth();
     const logsCollectionRef = collection(db, `users/${auth.currentUser?.uid}/logs`);
+    const userDocsRef = doc(db, "users", `${auth.currentUser?.uid}`);
+
+    // Run these upon page load
+    useEffect(() => {
+        retrieveLogs();
+        getDoc(userDocsRef).then((snapshot) => {
+            const userInfo = snapshot.data();
+            setFirstName(userInfo?.firstName);
+            setLastName(userInfo?.lastName);
+        })
+        .catch((err) => {
+            console.error(err);
+        }) 
+    }, []);
+
+    // When there is AI response, Get response and store the entries
+    useEffect(() => {
+        if (aiResponse) {
+          const emotionString = emotions.join(', ');
+          setFinalAIResponse('');
+
+          const prompt = `My name is ${firstName.trim()} ${lastName.trim()}. ${paragraph.trim()}.
+          I feel ${emotionString.trim()} about it. Give me some advice using this another advice: 
+          ${aiResponse.trim()}. You should be personal, sensitive, no bias, friendly, and very empathetic.`;
+
+          generateResponse(prompt)
+          .then((res) => {
+                setFinalAIResponse(res);
+
+                addDoc(logsCollectionRef, {
+                  log: paragraph.trim(),
+                  emotions: emotionString,
+                  response: finalAIResponse,
+                  date: new Date().toISOString().split('T')[0],
+                })
+                .then(() => {
+                  alert("Logged Successfully!")
+                  retrieveLogs();
+                  setParagraph('');
+                })
+                .catch((err) => {
+                  console.error(err);
+                  alert("Logging Unsuccessful!");
+                });
+          }).catch((err) => {
+                console.error(err);
+          });
+        }
+    }, [aiResponse]);
 
     // On paragraph change
     const handleParagraphChange = (e) => {
@@ -77,7 +130,6 @@ const Home = () => {
     const handleClear = () => {
         setShowResult(false)
     };
-
 
     // Get a random AI response
     function getRandomResponse(responses) {
@@ -119,6 +171,7 @@ const Home = () => {
         predictEmotions(paragraph)
             .then((response) => {
                 setParagraphResult('');
+                // @ts-ignore
                 const jsonData = response.predictions; // Access the 'predictions' property
     
                 // Initialize variables for the emotion with the highest score
@@ -229,59 +282,8 @@ const Home = () => {
                 }
                 setLoadingParagraph(false);
                 setParagraphResult(top3Emotions[0].label);
-                
-                const prompt = `the user wrote : ${paragraph}
-                The user portrays the emotion/emotions: ${top3Emotions[0].label}. Using the information provided above, respond, give advice, and symphatize witht he users
-                entry by using the sample responses below as a foundation. ${`${top3Emotions[0].label}Responses`}. Make your final output personalized, no bias, and is related to
-                the emotions of the user. 
-                `;
-                console.log("prompt " + prompt);
-        
-                // axios.post('https://sentimetry-api.onrender.com/get-response', { text: prompt })
-                // .then((res) => {
-                //     console.log("Response of AI: ", res.data.response);
-                //     setAiResponse(res.data.response);
-                // })
-                // .catch((err) => {
-                //     console.error(err);
-                // });
             })
     };
-    
-    // When there is AI response, store the log
-    useEffect(() => {
-        if (aiResponse) {
-          const emotionString = emotions.join(', ');
-          addDoc(logsCollectionRef, {
-            log: paragraph,
-            emotions: emotionString,
-            response: aiResponse,
-            date: new Date().toISOString().split('T')[0],
-          })
-          .then(() => {
-            alert("Logged Successfully!")
-            retrieveLogs();
-            setParagraph('');
-        })
-          .catch((err) => {
-            console.error(err);
-            alert("Logging Unsuccessful!");
-          });
-        }
-      }, [aiResponse]);
-
-    // Retrieve logs upon page load
-    useEffect(() => {
-        retrieveLogs();
-    }, []);
-
-    // CONSOLE IF retrieveLogs is working
-    useEffect(() => {
-        console.log("Logs: ", logs)
-        logs.forEach((log, index) => {
-            console.log("Index: ", index, "Log: ",log.log)
-        })
-    }, [logs]);
 
   return (
     <div className="bg-background-green">
@@ -324,7 +326,7 @@ const Home = () => {
                             <div>
                                 <h3 style={{color:'#BE912B'}} className='text-4xl font-bold mb-3'>Result</h3>
                                 {showResult ? (
-                                    <textarea value={loadingParagraph ? "Loading. . ." : "Based on your journal entry, your feelings are " + emotions[0] + ', ' + emotions[1] + ', and ' +  emotions[2] + ". I want you to know that " + aiResponse} readOnly={true} rows={10} cols={80} 
+                                    <textarea value={loadingParagraph ? "Loading. . ." : "Based on your journal entry, your feelings are " + emotions[0] + ', ' + emotions[1] + ', and ' +  emotions[2] + ".\n\n" + finalAIResponse} readOnly={true} rows={10} cols={80} 
                                         placeholder='Result' className='rounded-2xl bg-white p-4 w-full text-black text-xl'>
                                         <h1>{aiResponse}</h1>
                                     </textarea>
