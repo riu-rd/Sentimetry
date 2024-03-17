@@ -283,202 +283,144 @@ const Home = () => {
 
   return (
     <div className="bg-background-green">
-      <div className="w-screen m-0 p-4 ps-8 text-md bg-main-green justify-between flex">
-        <h1 className="century-gothic text-white font-black">SentiMetry</h1>
-        <button
-          onClick={handleLogout}
-          className="bg-transparent m-0 text-white p-4 rounded-xl text-xl me-5 hover:text-yellow-200"
-        >
-          Log Out
-        </button>
-      </div>
-      <div className="pt-10 px-28 h-screen">
-        <div className="mb-5">
-          <h1 className="text-sub-yellow font-bold">LOGS</h1>
+        <div className="w-screen m-0 p-3 ps-12 text-md bg-main-green justify-between flex items-center">
+            <h1 className="century-gothic text-white font-black text-5xl">SentiMetry</h1>
+            <button onClick={handleLogout} className="bg-transparent m-0 text-white p-4 rounded-xl text-xl me-5 hover:text-yellow-200"> Log Out</button>
         </div>
-        <div className="flex gap-10 h-3/4">
-          <div className="space-y-5 w-1/2 overflow-y-scroll">
-            {logs.map((item, index) => (
-              <button
-                key={index}
-                className="rounded-2xl w-11/12 p-4 h-max text-start bg-main-green hover:bg-emerald-600 space-y-4"
-                onClick={() =>
-                  handleOpenLogs(
-                    item.log,
-                    item.emotions,
-                    item.response,
-                    item.date
-                  )
-                }
-              >
-                <div>
-                  <h1 className="text-2xl font-bold text-yellow-200">Entry:</h1>
-                  <h3 className="text-xl">{item.log}</h3>
+        <div className="pt-4 px-28 h-screen">
+            <div className="mb-5">
+                <h1 className="text-sub-yellow font-bold">LOGS</h1>
+            </div>
+            <div className="flex gap-10 h-3/4">
+                <div className="space-y-5 w-1/2 overflow-y-scroll">
+                    {logs.map((item, index) => (
+                        <button key={index} className="rounded-2xl w-11/12 p-4 h-max text-start bg-main-green hover:bg-emerald-600 space-y-4" onClick={() => handleOpenLogs(item.log, item.emotions, item.response, item.date)}
+                        >
+                            <div>
+                                <h1 className="text-2xl font-bold text-yellow-200">Entry:</h1>
+                                <h3 className="text-xl">{item.log}</h3>
+                            </div>
+
+                            <div>
+                                <h1 className="text-2xl font-bold text-yellow-200">Emotions:</h1>
+                                <h3 className="text-xl">{item.emotions}</h3>
+                            </div>
+
+                            <h4 className="text-end">{item.date}</h4>
+                        </button>
+                    ))}
                 </div>
 
-                <div>
-                  <h1 className="text-2xl font-bold text-yellow-200">
-                    Emotions:
-                  </h1>
-                  <h3 className="text-xl">{item.emotions}</h3>
+                {show == "log" ? (
+                    <div className="flex gap-4 w-full">
+                        <div className="w-full">
+                            <h2 className="text-sub-yellow text-4xl font-bold mb-3">How Are You Feeling?</h2>
+                            <fieldset className="space-y-6">
+                                <form>
+                                    <textarea rows={27} cols={50} placeholder="Enter a Paragraph" onChange={(e) => handleParagraphChange(e)} value={paragraph}
+                                              className="w-full h-full resize-none rounded-2xl p-4 bg-white mb-3 text-black text-xl"
+                                    />
+                                </form>
+                            </fieldset>
+                        </div>
+
+                        <div className="grid grid-rows-7 w-full">
+                            <div className="row-span-2">
+                                <h3 className="text-sub-yellow text-4xl font-bold mb-3">Emotions</h3>
+                                {showResult ? (
+                                    <div className="rounded-2xl bg-white p-4 w-full text-black text-xl h-3/4">
+                                        {loadingParagraph ? "Loading. . ." : "Based on your journal entry, your feelings are " + emotions[0] +
+                                                ", " + emotions[1] + ", and " + emotions[2]}
+                                    
+                                    </div>
+                                ) : (
+                                    <div className="rounded-2xl bg-white p-4 w-full text-gray-400 text-xl h-3/4">
+                                        Your emotions will display here
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="row-span-5">
+                                <h3 className="text-sub-yellow text-4xl font-bold mb-3">
+                                    Response
+                                </h3>
+                                {showResult ? (
+                                    <div className="rounded-2xl bg-white p-4 w-full text-black text-xl h-custom">
+                                        {loadingParagraph ? "Loading. . ." : finalAIResponse}
+                                    </div>
+                                    ) : (
+                                    <div className="rounded-2xl bg-white p-4 w-full text-gray-400 text-xl h-custom">
+                                        {"Response to you will display here"}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <> </>
+                )}
+
+                {show == "history" ? (
+                    <div className="w-full rounded-2xl gap-5 grid grid-cols-3">
+                        <div className="bg-main-green p-6 col-span-2 rounded-xl h-full">
+                            <div className="space-y-3">
+                                <h1 className="text-yellow-200 font-bold">Journal Entry:</h1>
+                                <h3 className="text-2xl ps-5">{openedLogEntry}</h3>
+                            </div>
+
+                            <h3 className="text-end pt-4">{openedLogDate}</h3>
+                        </div>
+
+                        <div className="space-y-5 grid grid-rows-4">
+                            <div className="space-y-3 bg-main-green p-6 rounded-xl row-span-1">
+                                <h1 className="text-yellow-200 font-bold">Emotions:</h1>
+                                <h3 className="text-2xl ps-5">{openedLogEmotions}</h3>
+                            </div>
+
+                            <div className="space-y-3 bg-main-green p-6 rounded-xl row-span-3">
+                                <h1 className="text-yellow-200 font-bold">Response:</h1>
+                                <h3 className="text-2xl ps-5">{openedLogResponse}</h3>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <> </>
+                )}
                 </div>
 
-                <h4 className="text-end">{item.date}</h4>
-              </button>
-            ))}
-          </div>
-
-          {show == "log" ? (
-            <div className="flex gap-4">
-              <div className="w-full ">
-                <h2 className="text-sub-yellow text-4xl font-bold mb-3">
-                  How Are You Feeling?
-                </h2>
-                <fieldset className="space-y-6">
-                  <form onSubmit={(e) => onSubmitParagraph(e)}>
-                    <textarea
-                      rows={21}
-                      cols={50}
-                      placeholder="Enter a Paragraph"
-                      onChange={(e) => handleParagraphChange(e)}
-                      value={paragraph}
-                      className="w-full h-full resize-none rounded-2xl p-4 bg-white mb-3 text-black text-xl"
-                    />
-                    <button
-                      type="submit"
-                      className="font-bold bg-sub-yellow text-white text-2xl p-4 m-0 rounded-2xl hover:bg-yellow-500"
+                {show == "log" ? (
+                <div className="flex justify-end p-3 space-x-4">
+                     <button
+                        onClick={handleClear}
+                        className="clear m-0 bg-slate-500 hover:bg-slate-400 p-4 text-xl font-bold rounded-xl"
                     >
-                      Submit
+                        Clear All Results
                     </button>
-                  </form>
-                </fieldset>
-              </div>
-
-              <div>
-                <div>
-                  <h3 className="text-sub-yellow text-4xl font-bold mb-3">
-                    Emotions
-                  </h3>
-                  {showResult ? (
-                    <textarea
-                      value={
-                        loadingParagraph
-                          ? "Loading. . ."
-                          : "Based on your journal entry, your feelings are " +
-                            emotions[0] +
-                            ", " +
-                            emotions[1] +
-                            ", and " +
-                            emotions[2]
-                      }
-                      readOnly={true}
-                      rows={5}
-                      cols={80}
-                      placeholder="Your emotions will display here"
-                      className="resize-none rounded-2xl bg-white p-4 w-full text-black text-xl"
+                    <button
+                        type="submit"
+                        className="font-bold bg-sub-yellow text-white text-xl p-4 m-0 rounded-2xl hover:bg-yellow-500"
+                        onClick={(e) => onSubmitParagraph(e)}
                     >
-                      <h1>{aiResponse}</h1>
-                    </textarea>
-                  ) : (
-                    <textarea
-                      value={""}
-                      readOnly={true}
-                      rows={5}
-                      cols={80}
-                      placeholder="Result"
-                      className="resize-none rounded-2xl bg-white p-4 w-full text-black text-xl"
-                    ></textarea>
-                  )}
+                        Submit
+                    </button>
                 </div>
+                ) : (
+                <> </>
+                )}
 
-                <div>
-                  <h3 className="text-sub-yellow text-4xl font-bold mb-3">
-                    Response
-                  </h3>
-                  {showResult ? (
-                    <textarea
-                      value={
-                        loadingParagraph ? "Loading. . ." : finalAIResponse
-                      }
-                      readOnly={true}
-                      rows={12}
-                      cols={80}
-                      placeholder="Result"
-                      className="resize-none rounded-2xl bg-white p-4 w-full text-black text-xl"
+                {show == "history" ? (
+                <div className="flex justify-end space-x-4">
+                    <button
+                        onClick={() => setShow("log")}
+                        className="clear m-0 bg-sub-yellow p-4 rounded-xl font-bold w-1/12 text-xl hover:bg-yellow-500 mt-3"
                     >
-                      <h1>{aiResponse}</h1>
-                    </textarea>
-                  ) : (
-                    <textarea
-                      value={""}
-                      readOnly={true}
-                      rows={12}
-                      cols={80}
-                      placeholder="Response to you will display here"
-                      className="resize-none rounded-2xl bg-white p-4 w-full text-black text-xl"
-                    ></textarea>
-                  )}
+                        Done
+                    </button>
                 </div>
-              </div>
-            </div>
-          ) : (
+            ) : (
             <> </>
-          )}
-
-          {show == "history" ? (
-            <div className="w-full rounded-2xl gap-5 grid grid-cols-3">
-              <div className="bg-main-green p-6 col-span-2 rounded-xl h-full">
-                <div className="space-y-3">
-                  <h1 className="text-yellow-200 font-bold">Journal Entry:</h1>
-                  <h3 className="text-2xl ps-5">{openedLogEntry}</h3>
-                </div>
-
-                <h3 className="text-end pt-4">{openedLogDate}</h3>
-              </div>
-
-              <div className="space-y-5 grid grid-rows-4">
-                <div className="space-y-3 bg-main-green p-6 rounded-xl row-span-1">
-                  <h1 className="text-yellow-200 font-bold">Emotions:</h1>
-                  <h3 className="text-2xl ps-5">{openedLogEmotions}</h3>
-                </div>
-
-                <div className="space-y-3 bg-main-green p-6 rounded-xl row-span-3">
-                  <h1 className="text-yellow-200 font-bold">Response:</h1>
-                  <h3 className="text-2xl ps-5">{openedLogResponse}</h3>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <> </>
-          )}
+            )}
         </div>
-
-        {show == "log" ? (
-          <div className="flex justify-end p-3 space-x-4">
-            <button
-              onClick={handleClear}
-              className="clear m-0 bg-slate-400 hover:bg-slate-300 p-4 text-lg rounded-xl"
-            >
-              Clear All Results
-            </button>
-          </div>
-        ) : (
-          <> </>
-        )}
-
-        {show == "history" ? (
-          <div className="flex justify-end space-x-4">
-            <button
-              onClick={() => setShow("log")}
-              className="clear m-0 bg-sub-yellow p-4 rounded-xl font-bold w-1/12 text-xl hover:bg-yellow-500 mt-3"
-            >
-              Done
-            </button>
-          </div>
-        ) : (
-          <> </>
-        )}
-      </div>
     </div>
   );
 };

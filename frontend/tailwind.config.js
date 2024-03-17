@@ -10,6 +10,9 @@ export default {
         "sub-yellow": '#BE912B',
         "complement": '#A28D9F'
       },
+      height: {
+        "custom" : "90%"
+      }
     },
   },
   plugins: [],
