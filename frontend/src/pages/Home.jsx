@@ -317,8 +317,8 @@ const Home = () => {
                             <h2 className="text-sub-yellow text-4xl font-bold mb-3">How Are You Feeling?</h2>
                             <fieldset className="space-y-6">
                                 <form>
-                                    <textarea rows={27} cols={50} placeholder="Enter a Paragraph" onChange={(e) => handleParagraphChange(e)} value={paragraph}
-                                              className="w-full h-full resize-none rounded-2xl p-4 bg-white mb-3 text-black text-xl"
+                                    <textarea rows={show === 'log' ? '27' : '10'} cols={50} placeholder="Enter a Paragraph" onChange={(e) => handleParagraphChange(e)} value={paragraph}
+                                              className="w-full h-full resize-none rounded-2xl p-4 bg-white mb-3 text-black text-xl sm:text-xl md:text-xl lg:text-xl xl:text-xl"
                                     />
                                 </form>
                             </fieldset>
@@ -392,7 +392,7 @@ const Home = () => {
                 <div className="flex justify-end p-3 space-x-4">
                      <button
                         onClick={handleClear}
-                        className="clear m-0 bg-slate-500 hover:bg-slate-400 p-4 text-xl font-bold rounded-xl"
+                        className="clear m-0 bg-slate-500 hover:bg-slate-400 p-2 text-sm lg:text-md xl:text-lg font-bold rounded-xl"
                     >
                         Clear All Results
                     </button>

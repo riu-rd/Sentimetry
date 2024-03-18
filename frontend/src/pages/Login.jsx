@@ -59,7 +59,7 @@ const Login = () => {
     }
 
   return (
-    <section className="flex items-center justify-center">
+    <section className="flex flex-col lg:flex-row items-center justify-center lg:h-screen">
         <div>
             {showModal ? (
                 <>
@@ -118,7 +118,7 @@ const Login = () => {
                 Navigate Your Inner Landscape, One Entry at a Time
                 </h2>
             </div>
-            <div className="form-container bg-white rounded-3xl shadow-lg p-10 mt-8">
+            <div className="form-container bg-white rounded-3xl shadow-lg p-10 mt-8 sm:w-96 lg:w-full">
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div className="space-y-2">
                         <div>
