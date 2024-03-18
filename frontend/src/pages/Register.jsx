@@ -88,7 +88,7 @@ const Register = ( props, {user} ) => {
                     Navigate Your Inner Landscape, One Entry at a Time
                     </h2>
             </div>
-            <div className="form-container bg-white rounded-3xl shadow-lg p-10 m-auto">
+            <div className="form-container bg-white rounded-3xl shadow-lg p-10 mt-8 sm:w-96 lg:w-full">
                 <form onSubmit={handleRegister} className="space-y-1">
                     <div className="flex space-x-4">
                         <div>
