@@ -109,16 +109,16 @@ const Login = () => {
             ) : null}
         </div>
 
-        <div>
-            <div className="text-center text-main-yellow">
-                <h1 className="drop-shadow-xl text-9xl century-gothic font-extrabold mx-8 my-4 mt-">
+        <div className="w-full">
+            <div className="text-center text-main-yellow w-full">
+                <h1 className="drop-shadow-xl text-7xl sm:text-8xl md:text-8xl lg:text-8xl xl:text-9xl century-gothic font-extrabold mx-8 my-4 mt-">
                 SentiMetry
                 </h1>
                 <h2 className="drop-shadow-xl linden-hill-regular text-2xl text-white">
                 Navigate Your Inner Landscape, One Entry at a Time
                 </h2>
             </div>
-            <div className="form-container bg-white rounded-3xl shadow-lg p-10 mt-8 sm:w-96 lg:w-full">
+            <div className="form-container bg-white rounded-3xl shadow-lg p-10 mt-8 w-full sm:w-full xl:w-11/12">
                 <form onSubmit={handleLogin} className="space-y-4">
                     <div className="space-y-2">
                         <div>

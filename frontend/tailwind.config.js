@@ -11,7 +11,9 @@ export default {
         "complement": '#A28D9F'
       },
       height: {
-        "custom" : "90%"
+        "custom" : "100%",
+        "homepage": "99%",
+        "custom2": '50%'
       }
     },
   },

@@ -283,41 +283,45 @@ const Home = () => {
 
   return (
     <div className="bg-background-green">
-        <div className="w-screen m-0 p-3 ps-12 text-md bg-main-green justify-between flex items-center">
-            <h1 className="century-gothic text-white font-black text-5xl">SentiMetry</h1>
-            <button onClick={handleLogout} className="bg-transparent m-0 text-white p-4 rounded-xl text-xl me-5 hover:text-yellow-200"> Log Out</button>
+        <div className="m-0 p-3 text-md bg-main-green justify-between flex items-center lg:w-screen w-full">
+            <h1 className="century-gothic text-white font-black text-4xl sm:text-5xl ps-8 sm:ps-14">SentiMetry</h1>
+            <button onClick={handleLogout} className="bg-transparent m-0 text-white p-4 rounded-xl lg:pe-12 text-xl hover:text-yellow-200"> Log Out</button>
         </div>
-        <div className="pt-4 px-28 h-screen">
-            <div className="mb-5">
-                <h1 className="text-sub-yellow font-bold">LOGS</h1>
+        <div className="pt-6 px-14 lg:px-28 xl:h-screen">
+            <div className="mb-5 text-start">
+                <h1 className="text-sub-yellow font-bold text-4xl sm:text-5xl">LOGS</h1>
             </div>
-            <div className="flex gap-10 h-3/4">
-                <div className="space-y-5 w-1/2 overflow-y-scroll">
-                    {logs.map((item, index) => (
-                        <button key={index} className="rounded-2xl w-11/12 p-4 h-max text-start bg-main-green hover:bg-emerald-600 space-y-4" onClick={() => handleOpenLogs(item.log, item.emotions, item.response, item.date)}
-                        >
-                            <div>
-                                <h1 className="text-2xl font-bold text-yellow-200">Entry:</h1>
-                                <h3 className="text-xl">{item.log}</h3>
-                            </div>
+            <div className="xl:flex gap-10 h-5/6">
+                <div className="space-y-5 w-full xl:w-1/2 overflow-y-scroll h-96 xl:h-full">
+                    {logs.length > 0 ? (
+                        logs.map((item, index) => (
+                            <button key={index} className="rounded-2xl w-full xl:w-11/12 p-4 h-max text-start bg-main-green hover:bg-emerald-600 space-y-4" onClick={() => handleOpenLogs(item.log, item.emotions, item.response, item.date)}>
+                                <div>
+                                    <h1 className="text-2xl font-bold text-yellow-200">Entry:</h1>
+                                    <h3 className="text-xl">{item.log}</h3>
+                                </div>
 
-                            <div>
-                                <h1 className="text-2xl font-bold text-yellow-200">Emotions:</h1>
-                                <h3 className="text-xl">{item.emotions}</h3>
-                            </div>
+                                <div>
+                                    <h1 className="text-2xl font-bold text-yellow-200">Emotions:</h1>
+                                    <h3 className="text-xl">{item.emotions}</h3>
+                                </div>
 
-                            <h4 className="text-end">{item.date}</h4>
-                        </button>
-                    ))}
+                                <h4 className="text-end">{item.date}</h4>
+                            </button>
+                        ))
+                    ) : (
+                        <div className="text-start text-2xl text-gray-500">No logs yet</div>
+                    )}
                 </div>
 
+
                 {show == "log" ? (
-                    <div className="flex gap-4 w-full">
+                    <div className="mt-4 xl:mt-0 gap-4 w-full">
                         <div className="w-full">
                             <h2 className="text-sub-yellow text-4xl font-bold mb-3">How Are You Feeling?</h2>
                             <fieldset className="space-y-6">
                                 <form>
-                                    <textarea rows={show === 'log' ? '27' : '10'} cols={50} placeholder="Enter a Paragraph" onChange={(e) => handleParagraphChange(e)} value={paragraph}
+                                    <textarea rows={10} cols={50} placeholder="Enter a Paragraph" onChange={(e) => handleParagraphChange(e)} value={paragraph}
                                               className="w-full h-full resize-none rounded-2xl p-4 bg-white mb-3 text-black text-xl sm:text-xl md:text-xl lg:text-xl xl:text-xl"
                                     />
                                 </form>
@@ -340,7 +344,7 @@ const Home = () => {
                                 )}
                             </div>
 
-                            <div className="row-span-5">
+                            <div className="row-span-5 mt-10 sm:mt-10">
                                 <h3 className="text-sub-yellow text-4xl font-bold mb-3">
                                     Response
                                 </h3>
@@ -361,10 +365,10 @@ const Home = () => {
                 )}
 
                 {show == "history" ? (
-                    <div className="w-full rounded-2xl gap-5 grid grid-cols-3">
-                        <div className="bg-main-green p-6 col-span-2 rounded-xl h-full">
+                    <div className="w-full rounded-2xl gap-5 xl:grid xl:grid-cols-3 space-y-3 xl:space-y-0 mt-3 sm:mt-3">
+                        <div className="bg-main-green p-6 col-span-2 rounded-xl xl:h-full">
                             <div className="space-y-3">
-                                <h1 className="text-yellow-200 font-bold">Journal Entry:</h1>
+                                <h1 className="text-yellow-200 font-bold text-5xl">Journal Entry:</h1>
                                 <h3 className="text-2xl ps-5">{openedLogEntry}</h3>
                             </div>
 
@@ -389,10 +393,10 @@ const Home = () => {
                 </div>
 
                 {show == "log" ? (
-                <div className="flex justify-end p-3 space-x-4">
+                <div className="flex justify-end mt-14 sm:mt-14 xl:mt-0 p-3 space-x-4">
                      <button
                         onClick={handleClear}
-                        className="clear m-0 bg-slate-500 hover:bg-slate-400 p-2 text-sm lg:text-md xl:text-lg font-bold rounded-xl"
+                        className="clear m-0 bg-slate-500 hover:bg-slate-400 p-4 text-xl lg:text-md xl:text-lg font-bold rounded-xl"
                     >
                         Clear All Results
                     </button>
@@ -409,10 +413,10 @@ const Home = () => {
                 )}
 
                 {show == "history" ? (
-                <div className="flex justify-end space-x-4">
+                <div className="flex justify-end space-x-4 mt-3">
                     <button
                         onClick={() => setShow("log")}
-                        className="clear m-0 bg-sub-yellow p-4 rounded-xl font-bold w-1/12 text-xl hover:bg-yellow-500 mt-3"
+                        className="clear m-0 bg-sub-yellow p-4 rounded-xl font-bold xl:w-1/12 text-xl hover:bg-yellow-500 mt-3"
                     >
                         Done
                     </button>
