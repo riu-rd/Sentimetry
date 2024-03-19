@@ -95,7 +95,6 @@ async def predict_emotions_keras(paragraph : Paragraph):
     for text in text_list:
         scores = keras_model(tf.constant([text]))['dense_1'][0]
         emotion = [{'label': label, 'score': score} for label, score in zip(classes, scores.numpy())]
-        print(emotion)
         predictions_per_text.append(emotion)
 
     # Create a dictionary to aggregate scores for each label
