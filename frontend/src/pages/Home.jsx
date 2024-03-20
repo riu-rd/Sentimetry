@@ -134,6 +134,9 @@ const Home = () => {
   // Clear Text
   const handleClear = () => {
     setShowResult(false);
+    setParagraph("")
+    setFinalAIResponse("")
+    setEmotions([])
   };
 
   // Get a random AI response
@@ -300,7 +303,7 @@ const Home = () => {
             <div className="xl:flex gap-10 h-logsHeight">
                 <div className="space-y-5 w-full xl:w-1/2 overflow-y-scroll h-96 xl:h-full">
                     {logs.length > 0 ? (
-                        logs.map((item, index) => (
+                        logs.slice().reverse().map((item, index) => (
                             <button key={index} className="rounded-2xl w-full xl:w-11/12 p-4 h-max text-start bg-main-green hover:bg-emerald-600 space-y-4" onClick={() => handleOpenLogs(item.
 // @ts-ignore
                             log, item.emotions, item.response, item.date)}>
@@ -358,7 +361,7 @@ const Home = () => {
                                 )}
                             </div>
 
-                            <div className="sm:mt-10 lg:h-1/2 xl:h-3/4">
+                            <div className="lg:h-1/2 xl:h-3/4 mt-3">
                                 <h3 className="text-sub-yellow text-4xl font-bold mb-3">
                                     Response
                                 </h3>
@@ -372,6 +375,22 @@ const Home = () => {
                                     </div>
                                 )}
                             </div>
+
+                            <div className="flex justify-end xl:mt-0 p-3 space-x-4">
+                                <button
+                                    onClick={handleClear}
+                                    className="clear m-0 bg-slate-500 hover:bg-slate-400 p-4 text-xl lg:text-md xl:text-lg font-bold rounded-xl"
+                                >
+                                    Clear All Results
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="font-bold bg-sub-yellow text-white text-xl p-4 m-0 rounded-2xl hover:bg-yellow-500"
+                                    onClick={(e) => onSubmitParagraph(e)}
+                                >
+                                    Submit
+                                </button>
+                            </div>
                         </div>
                     </div>
                 ) : (
@@ -379,7 +398,7 @@ const Home = () => {
                 )}
 
                 {show == "history" ? (
-                    <div className="w-full rounded-2xl gap-5 xl:grid xl:grid-cols-3 space-y-3 xl:space-y-0 mt-3 sm:mt-3">
+                    <div className="w-full rounded-2xl gap-3 xl:grid xl:grid-cols-3 xl:space-y-0 mt-3 sm:mt-3">
                         <div className="bg-main-green p-6 col-span-2 rounded-xl xl:h-full">
                             <div className="space-y-3">
                                 <h1 className="text-yellow-200 font-bold text-5xl">Journal Entry:</h1>
@@ -400,44 +419,22 @@ const Home = () => {
                                 <h3 className="text-2xl ps-5">{openedLogResponse}</h3>
                             </div>
                         </div>
+                        <div className="w-full col-span-3 flex justify-end">
+                            <button
+                                onClick={() => setShow("log")}
+                                className="clear m-0 bg-sub-yellow p-4 rounded-xl font-bold xl:w-1/12 text-xl hover:bg-yellow-500 mt-3"
+                            >
+                                Done
+                            </button>
+                        </div>
                     </div>
                 ) : (
                     <> </>
                 )}
                 </div>
 
-                {show == "log" ? (
-                <div className="flex justify-end xl:mt-0 p-3 space-x-4">
-                     <button
-                        onClick={handleClear}
-                        className="clear m-0 bg-slate-500 hover:bg-slate-400 p-4 text-xl lg:text-md xl:text-lg font-bold rounded-xl"
-                    >
-                        Clear All Results
-                    </button>
-                    <button
-                        type="submit"
-                        className="font-bold bg-sub-yellow text-white text-xl p-4 m-0 rounded-2xl hover:bg-yellow-500"
-                        onClick={(e) => onSubmitParagraph(e)}
-                    >
-                        Submit
-                    </button>
-                </div>
-                ) : (
-                <> </>
-                )}
+                
 
-                {show == "history" ? (
-                <div className="flex justify-end space-x-4 mt-3">
-                    <button
-                        onClick={() => setShow("log")}
-                        className="clear m-0 bg-sub-yellow p-4 rounded-xl font-bold xl:w-1/12 text-xl hover:bg-yellow-500 mt-3"
-                    >
-                        Done
-                    </button>
-                </div>
-            ) : (
-            <> </>
-            )}
         </div>
     </div>
   );
