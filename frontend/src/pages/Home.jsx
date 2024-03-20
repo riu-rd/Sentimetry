@@ -398,7 +398,7 @@ const Home = () => {
                 )}
 
                 {show == "history" ? (
-                    <div className="w-full rounded-2xl gap-3 xl:grid xl:grid-cols-3 xl:space-y-0 mt-3 sm:mt-3">
+                    <div className="w-full rounded-2xl gap-5 xl:grid xl:grid-cols-3 xl:space-y-0 mt-3 sm:mt-3">
                         <div className="bg-main-green p-6 col-span-2 rounded-xl xl:h-full">
                             <div className="space-y-3">
                                 <h1 className="text-yellow-200 font-bold text-5xl">Journal Entry:</h1>
