@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase.js";
 // Components
@@ -42,6 +42,7 @@ function App() {
               path="/home"
               element={<ProtectedRoute user={user} children={<Home />} />}
             />
+            <Route path="/*" element={<Navigate to="/" />} />
           </Routes>
         </BrowserRouter>
       )}
