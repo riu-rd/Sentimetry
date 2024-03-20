@@ -86,7 +86,7 @@ const Home = () => {
 
       const prompt = `My name is ${firstName.trim()} ${lastName.trim()}. ${paragraph.trim()}.
           I feel ${emotionString.trim()} about it. Give me some advice using this another advice: 
-          ${aiResponse.trim()}. You should be personal, sensitive, no bias, friendly, and very empathetic.`;
+          ${aiResponse.trim()}. You should be personal, sensitive, no bias, friendly, and very empathetic. Focus on things about me. Give advice about me.`;
 
       generateResponse(prompt, aiResponse.trim())
         .then((res) => {
