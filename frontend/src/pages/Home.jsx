@@ -293,11 +293,11 @@ const Home = () => {
             <h1 className="century-gothic text-white font-black text-4xl sm:text-5xl ps-8 sm:ps-14">SentiMetry</h1>
             <button onClick={handleLogout} className="bg-transparent m-0 text-white p-4 rounded-xl lg:pe-12 text-xl hover:text-yellow-200"> Log Out</button>
         </div>
-        <div className="pt-6 px-14 lg:px-28 xl:h-screen">
+        <div className="pt-6 px-14 lg:px-28 xl:h-mainContentHeight">
             <div className="mb-5 text-start">
-                <h1 className="text-sub-yellow font-bold text-4xl sm:text-5xl">LOGS</h1>
+                <h1 className="text-sub-yellow font-bold text-4xl sm:text-4xl">LOGS</h1>
             </div>
-            <div className="xl:flex gap-10 h-5/6">
+            <div className="xl:flex gap-10 h-logsHeight ">
                 <div className="space-y-5 w-full xl:w-1/2 overflow-y-scroll h-96 xl:h-full">
                     {logs.length > 0 ? (
                         logs.map((item, index) => (
@@ -342,8 +342,8 @@ const Home = () => {
                             </fieldset>
                         </div>
 
-                        <div className="grid grid-rows-7 w-full">
-                            <div className="row-span-2">
+                        <div className=" w-full h-responsesHeight">
+                            <div className="h-1/">
                                 <h3 className="text-sub-yellow text-4xl font-bold mb-3">Emotions</h3>
                                 {showResult ? (
                                     <div className="rounded-2xl bg-white p-4 w-full text-black text-xl h-3/4">
@@ -352,22 +352,22 @@ const Home = () => {
                                     
                                     </div>
                                 ) : (
-                                    <div className="rounded-2xl bg-white p-4 w-full text-gray-400 text-xl h-3/4">
-                                        Your emotions will display here
+                                    <div className="rounded-2xl bg-white p-4 w-full h-3/4">
+                                        <h1 className="text-gray-400 text-xl">Your emotions will display here</h1>
                                     </div>
                                 )}
                             </div>
 
-                            <div className="row-span-5 mt-10 sm:mt-10">
+                            <div className="sm:mt-10 h-3/4">
                                 <h3 className="text-sub-yellow text-4xl font-bold mb-3">
                                     Response
                                 </h3>
                                 {showResult ? (
-                                    <div className="rounded-2xl bg-white p-4 w-full text-black text-xl h-custom">
+                                    <div className="rounded-2xl bg-white p-4 w-full text-black text-xl h-3/4">
                                         {loadingParagraph ? <EmoLoader /> : finalAIResponse}
                                     </div>
                                     ) : (
-                                    <div className="rounded-2xl bg-white p-4 w-full text-gray-400 text-xl h-custom">
+                                    <div className="rounded-2xl bg-white p-4 w-full text-gray-400 text-xl h-3/4">
                                         {"Response to you will display here"}
                                     </div>
                                 )}
@@ -407,7 +407,7 @@ const Home = () => {
                 </div>
 
                 {show == "log" ? (
-                <div className="flex justify-end mt-14 sm:mt-14 xl:mt-0 p-3 space-x-4">
+                <div className="flex justify-end xl:mt-0 p-3 space-x-">
                      <button
                         onClick={handleClear}
                         className="clear m-0 bg-slate-500 hover:bg-slate-400 p-4 text-xl lg:text-md xl:text-lg font-bold rounded-xl"
