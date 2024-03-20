@@ -4,7 +4,7 @@ const API_TOKEN = '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';
 const API_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2";
 const headers = { Authorization: `Bearer ${API_TOKEN}` };
 
-const generateResponse = async (query) => {
+const generateResponse = async (query, hc_response) => {
   const jsonText = { inputs: query };
   try {
     const response = await axios.post(API_URL, jsonText, { headers });
@@ -25,7 +25,7 @@ const generateResponse = async (query) => {
     return generatedText;
   } catch (error) {
     console.error('Error:', error.response.data);
-    throw error;
+    return hc_response;
   }
 };
 

@@ -36,6 +36,7 @@ import {
   surpriseResponses,
   neutralResponses,
 } from "./emotionResponses";
+import React from "react";
 
 const Home = () => {
   // Declarations
@@ -86,7 +87,7 @@ const Home = () => {
           I feel ${emotionString.trim()} about it. Give me some advice using this another advice: 
           ${aiResponse.trim()}. You should be personal, sensitive, no bias, friendly, and very empathetic.`;
 
-      generateResponse(prompt)
+      generateResponse(prompt, aiResponse.trim())
         .then((res) => {
           setFinalAIResponse(res);
 
