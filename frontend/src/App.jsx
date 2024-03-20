@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase.js";
+import { auth } from "./firebase.js";
 // Components
 import ProtectedRoute from "./components/ProtectedRoute";
 // Pages
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Home from "./pages/Home";
+import Loader from "./components/Loader.jsx";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -30,7 +31,7 @@ function App() {
   return (
     <main>
       {loading ? (
-        <h2>Loading. . .</h2>
+        <Loader />
       ) : (
         <BrowserRouter>
           <Routes>

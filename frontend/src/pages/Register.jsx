@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, doc, setDoc } from "firebase/firestore";
-import { db } from '../../firebase.js';
+import { db } from '../firebase.js';
 import "../tailwind.css"; // Import Tailwind CSS file
 
-const Register = ( props, {user} ) => {
+const Register = ({user}) => {
   // Check if user is already authenticated
   const navigate = useNavigate();
   if (user) {
@@ -62,7 +62,6 @@ const Register = ( props, {user} ) => {
             lastName: credentials.lastName
         })
         .then(() => {
-            alert(`Firestore Registration Successful`);
             clearCredentials();
         })
         .catch((err) => {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAuth, signOut } from "firebase/auth";
-import { db } from "../../firebase.js";
+import { db } from "../firebase.js";
 import predictEmotions from "../apis/predictEmotions";
 import generateResponse from "../apis/generateResponse.js";
 import { collection, addDoc, getDocs, getDoc, doc } from "firebase/firestore";
@@ -37,6 +37,7 @@ import {
   neutralResponses,
 } from "./emotionResponses";
 import React from "react";
+import EmoLoader from "../components/EmoLoader.jsx";
 
 const Home = () => {
   // Declarations
@@ -98,16 +99,18 @@ const Home = () => {
             date: new Date().toISOString().split("T")[0],
           })
             .then(() => {
-              alert("Logged Successfully!");
               retrieveLogs();
+              setLoadingParagraph(false);
             })
             .catch((err) => {
               console.error(err);
               alert("Logging Unsuccessful!");
+              setLoadingParagraph(false);
             });
         })
         .catch((err) => {
           console.error(err);
+          setLoadingParagraph(false);
         });
     }
   }, [aiResponse]);
@@ -121,7 +124,6 @@ const Home = () => {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        alert("Logged out Successfully");
       })
       .catch((err) => {
         alert("Log out error");
@@ -173,6 +175,7 @@ const Home = () => {
     setShowResult(true);
     setLoadingParagraph(true);
     predictEmotions(paragraph).then((response) => {
+      // @ts-ignore
       const jsonData = response.predictions;
       // Sort the emotions
       const sortedEmotions = jsonData.sort((a, b) => b.score - a.score);
@@ -182,9 +185,11 @@ const Home = () => {
 
       // Get only the emotions from the array of objects
       const emotions = [];
+      // @ts-ignore
       top3Emotions.forEach((entry, index) => {
         emotions.push(entry.label);
       });
+      // @ts-ignore
       setEmotions(emotions);
 
       // Generate the response based on the emotion identified
@@ -278,7 +283,7 @@ const Home = () => {
         default:
           setAiResponse("no emotion matched");
       }
-      setLoadingParagraph(false);
+
     });
   };
 
@@ -296,18 +301,26 @@ const Home = () => {
                 <div className="space-y-5 w-full xl:w-1/2 overflow-y-scroll h-96 xl:h-full">
                     {logs.length > 0 ? (
                         logs.map((item, index) => (
-                            <button key={index} className="rounded-2xl w-full xl:w-11/12 p-4 h-max text-start bg-main-green hover:bg-emerald-600 space-y-4" onClick={() => handleOpenLogs(item.log, item.emotions, item.response, item.date)}>
+                            <button key={index} className="rounded-2xl w-full xl:w-11/12 p-4 h-max text-start bg-main-green hover:bg-emerald-600 space-y-4" onClick={() => handleOpenLogs(item.
+// @ts-ignore
+                            log, item.emotions, item.response, item.date)}>
                                 <div>
                                     <h1 className="text-2xl font-bold text-yellow-200">Entry:</h1>
-                                    <h3 className="text-xl">{item.log}</h3>
+                                    <h3 className="text-xl">{item.
+// @ts-ignore
+                                    log}</h3>
                                 </div>
 
                                 <div>
                                     <h1 className="text-2xl font-bold text-yellow-200">Emotions:</h1>
-                                    <h3 className="text-xl">{item.emotions}</h3>
+                                    <h3 className="text-xl">{item.
+// @ts-ignore
+                                    emotions}</h3>
                                 </div>
 
-                                <h4 className="text-end">{item.date}</h4>
+                                <h4 className="text-end">{item.
+// @ts-ignore
+                                date}</h4>
                             </button>
                         ))
                     ) : (
@@ -334,7 +347,7 @@ const Home = () => {
                                 <h3 className="text-sub-yellow text-4xl font-bold mb-3">Emotions</h3>
                                 {showResult ? (
                                     <div className="rounded-2xl bg-white p-4 w-full text-black text-xl h-3/4">
-                                        {loadingParagraph ? "Loading. . ." : "Based on your journal entry, your feelings are " + emotions[0] +
+                                        {loadingParagraph ? <EmoLoader /> : "Based on your journal entry, your feelings are " + emotions[0] +
                                                 ", " + emotions[1] + ", and " + emotions[2]}
                                     
                                     </div>
@@ -351,7 +364,7 @@ const Home = () => {
                                 </h3>
                                 {showResult ? (
                                     <div className="rounded-2xl bg-white p-4 w-full text-black text-xl h-custom">
-                                        {loadingParagraph ? "Loading. . ." : finalAIResponse}
+                                        {loadingParagraph ? <EmoLoader /> : finalAIResponse}
                                     </div>
                                     ) : (
                                     <div className="rounded-2xl bg-white p-4 w-full text-gray-400 text-xl h-custom">

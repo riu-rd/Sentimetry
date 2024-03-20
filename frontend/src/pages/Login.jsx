@@ -2,11 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import "../tailwind.css"; // Import Tailwind CSS file
+import React from "react";
 
-const Login = () => {
+const Login = ({user}) => {
     // Check if user is already authenticated
     const navigate = useNavigate();
-
+    if (user) {
+        navigate("/home");
+    }
+    
     // Declarations
     const [credentials, setCredentials] = useState({ email: "", password: "" });
     const [showModal, setShowModal] = useState(false);
@@ -30,7 +34,6 @@ const Login = () => {
         );
 
         const userEmail = userCredential.user.email;
-        alert(`Successfully Logged in: ${userEmail}`);
 
         // Redirect to "/home" after successful login
         navigate("/home");
