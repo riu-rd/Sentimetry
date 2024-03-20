@@ -9,11 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install dependencies and build
-        working-directory: frontend # Change to the frontend directory
-        run: |
-          npm ci
-          npm run build
+      - run: (cd frontend && npm ci && npm run build)
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
