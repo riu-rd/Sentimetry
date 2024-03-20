@@ -42,6 +42,7 @@ function App() {
               path="/home"
               element={<ProtectedRoute user={user} children={<Home />} />}
             />
+            <Route path="/*" element={<Navigate to="/" />} />
           </Routes>
         </BrowserRouter>
       )}
