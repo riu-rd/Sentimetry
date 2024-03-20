@@ -13,7 +13,7 @@ export default {
       height: {
         "logsHeight": "82%",
         "responsesHeight": "53%",
-        "mainContentHeight": "92.5vh"
+        "mainContentHeight": "91vh"
       }
     },
   },

@@ -294,10 +294,10 @@ const Home = () => {
             <button onClick={handleLogout} className="bg-transparent m-0 text-white p-4 rounded-xl lg:pe-12 text-xl hover:text-yellow-200"> Log Out</button>
         </div>
         <div className="pt-6 px-14 lg:px-28 xl:h-mainContentHeight">
-            <div className="mb-5 text-start">
+            <div className="mb-3 text-start">
                 <h1 className="text-sub-yellow font-bold text-4xl sm:text-4xl">LOGS</h1>
             </div>
-            <div className="xl:flex gap-10 h-logsHeight ">
+            <div className="xl:flex gap-10 h-logsHeight">
                 <div className="space-y-5 w-full xl:w-1/2 overflow-y-scroll h-96 xl:h-full">
                     {logs.length > 0 ? (
                         logs.map((item, index) => (
@@ -330,13 +330,13 @@ const Home = () => {
 
 
                 {show == "log" ? (
-                    <div className="mt-4 xl:mt-0 gap-4 w-full">
+                    <div className="mt-4 xl:mt-0 gap-4 w-full h-full">
                         <div className="w-full">
                             <h2 className="text-sub-yellow text-4xl font-bold mb-3">How Are You Feeling?</h2>
                             <fieldset className="space-y-6">
                                 <form>
-                                    <textarea rows={10} cols={50} placeholder="Enter a Paragraph" onChange={(e) => handleParagraphChange(e)} value={paragraph}
-                                              className="w-full h-full resize-none rounded-2xl p-4 bg-white mb-3 text-black text-xl sm:text-xl md:text-xl lg:text-xl xl:text-xl"
+                                    <textarea placeholder="Enter a Paragraph" onChange={(e) => handleParagraphChange(e)} value={paragraph}
+                                              className="w-full h-48 resize-none rounded-2xl p-4 bg-white mb-3 text-black text-xl sm:text-xl md:text-xl lg:text-xl xl:text-xl"
                                     />
                                 </form>
                             </fieldset>
@@ -358,7 +358,7 @@ const Home = () => {
                                 )}
                             </div>
 
-                            <div className="sm:mt-10 h-3/4">
+                            <div className="sm:mt-10 lg:h-1/2 xl:h-3/4">
                                 <h3 className="text-sub-yellow text-4xl font-bold mb-3">
                                     Response
                                 </h3>
@@ -407,7 +407,7 @@ const Home = () => {
                 </div>
 
                 {show == "log" ? (
-                <div className="flex justify-end xl:mt-0 p-3 space-x-">
+                <div className="flex justify-end xl:mt-0 p-3 space-x-4">
                      <button
                         onClick={handleClear}
                         className="clear m-0 bg-slate-500 hover:bg-slate-400 p-4 text-xl lg:text-md xl:text-lg font-bold rounded-xl"
