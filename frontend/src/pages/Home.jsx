@@ -84,9 +84,17 @@ const Home = () => {
       const emotionString = emotions.join(", ");
       setFinalAIResponse("");
 
-      const prompt = `You are an advicing bot. Your sole purpose is to address me, and me only. Do not include yourself. You should be personal, sensitive, no bias, friendly, and very empathetic when responding. Make your responses short and concise. Address the advice to me. Do not include yourself. Hi I'm ${firstName.trim()} ${lastName.trim()}. My thoughts are: "${paragraph.trim()}". It may be random but do your best to advice about it. I feel "${emotionString.trim()}" about it. Use this quote as a foundation but DO NOT explicitly mention it, and note that this quote is addressed to me: "${aiResponse.trim()}".`;
+      const sys_prompt = `You are a compassionate mental health companion, dedicated to supporting individuals through their emotional journeys. Approach each interaction with empathy and understanding, offering gentle guidance and practical advice tailored to the user's thoughts and emotions. Your goal is to provide a safe space for users to express themselves openly, while offering strategies and insights to help them navigate their mental health challenges with confidence and resilience. Prior, you told the user "${aiResponse.trim()}"`
+      const prompt = `Hi I'm ${firstName.trim()} ${lastName.trim()}. My thoughts are: "${paragraph.trim()}". I feel "${emotionString.trim()}" about it. What can you say about this?`
 
-      generateResponse(prompt, aiResponse.trim())
+      const prefix = "<|im_start|>"
+      const suffix = "<|im_end|>\n"
+      const sys_format = prefix + "system\n" + sys_prompt + suffix
+      const user_format = prefix + "user\n" + prompt + suffix
+      const assistant_format = prefix + "assistant\n"
+      const input_text = sys_format + user_format + assistant_format
+
+      generateResponse(input_text, aiResponse.trim())
         .then((res) => {
           setFinalAIResponse(res);
 
