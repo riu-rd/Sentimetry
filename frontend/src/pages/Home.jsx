@@ -429,7 +429,7 @@ const Home = () => {
 
                 {show == "history" ? (
                     <div className="flex flex-row flex-wrap justify-start items-center w-full xl:w-3/5 rounded-2xl gap-2 mt-8 xl:mt-0 xl:h-[75vh]">
-                        <div className="bg-main-green p-6 rounded-xl h-fit w-full xl:w-1/2">
+                        <div className="bg-main-green p-6 rounded-xl h-fit w-full xl:w-1/2 border">
                             <div className="overflow-y-scroll  xl:h-[35rem]">
                                 <h1 className="text-yellow-200 font-bold text-4xl">Journal Entry:</h1>
                                 <h3 className="text-2xl ps-5">{openedLogEntry}</h3>
@@ -438,7 +438,7 @@ const Home = () => {
                             <h3 className="text-end pt-4">{openedLogDate}</h3>
                         </div>
 
-                        <div className="flex flex-row flex-wrap justify-start items-start gap-2 w-full xl:w-2/5 rounded-xl h-fit">
+                        <div className="flex flex-row flex-wrap justify-start items-start gap-2 w-full xl:w-2/5 rounded-xl h-fit ">
                             <div className=" bg-main-green p-6 rounded-xl w-full h-fit">
                                 <h1 className="text-yellow-200 font-bold text-4xl">Emotions:</h1>
                                 <h3 className="text-2xl ps-5 xl:h-[4rem]">{openedLogEmotions}</h3>
@@ -450,10 +450,10 @@ const Home = () => {
                             </div>
                             
                         </div>
-                        <div className="w-full flex justify-center">
+                        <div className="w-11/12 flex justify-end">
                             <button
                                 onClick={() => setShow("log")}
-                                className="clear m-0 bg-sub-yellow p-4 rounded-xl font-bold xl:w-1/2 text-xl hover:bg-yellow-500"
+                                className="clear m-0 bg-sub-yellow p-4 rounded-xl font-bold xl:w-1/6 text-xl hover:bg-yellow-500 me-4"
                             >
                                 Done
                             </button>
