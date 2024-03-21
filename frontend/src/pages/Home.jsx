@@ -153,7 +153,7 @@ const Home = () => {
           current.push(doc.data());
         });
         // @ts-ignore
-        
+        setLogs(current);
         current.sort((a, b) => {
           // Convert the date strings to Date objects
           let dateA = new Date(a.date);
