@@ -97,23 +97,6 @@ const Home = () => {
       generateResponse(input_text, aiResponse.trim())
         .then((res) => {
           setFinalAIResponse(res);
-
-          addDoc(logsCollectionRef, {
-            log: paragraph.trim(),
-            emotions: emotionString,
-            response: finalAIResponse,
-            date: new Date().toISOString().split("T")[0],
-            timestamp: serverTimestamp()
-          })
-            .then(() => {
-              retrieveLogs();
-              setLoadingParagraph(false);
-            })
-            .catch((err) => {
-              console.error(err);
-              alert("Logging Unsuccessful!");
-              setLoadingParagraph(false);
-            });
         })
         .catch((err) => {
           console.error(err);
@@ -121,6 +104,30 @@ const Home = () => {
         });
     }
   }, [aiResponse]);
+
+  // When there is Final AI Response, log the response
+  useEffect(() => {
+    const emotionString = emotions.join(", ");
+
+    if (finalAIResponse !== "") {
+      addDoc(logsCollectionRef, {
+        log: paragraph.trim(),
+        emotions: emotionString,
+        response: finalAIResponse,
+        date: new Date().toISOString().split("T")[0],
+        timestamp: serverTimestamp()
+      })
+        .then(() => {
+          retrieveLogs();
+          setLoadingParagraph(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("Logging Unsuccessful!");
+          setLoadingParagraph(false);
+        });
+    }
+  }, [finalAIResponse]);
 
   // On paragraph change
   const handleParagraphChange = (e) => {
