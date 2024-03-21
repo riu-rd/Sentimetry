@@ -3,7 +3,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { db } from "../firebase.js";
 import predictEmotions from "../apis/predictEmotions";
 import generateResponse from "../apis/generateResponse.js";
-import { collection, addDoc, getDocs, getDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, getDoc, doc, serverTimestamp, query, orderBy } from "firebase/firestore";
 import "../index.css";
 
 import {
@@ -84,9 +84,7 @@ const Home = () => {
       const emotionString = emotions.join(", ");
       setFinalAIResponse("");
 
-      const prompt = `My name is ${firstName.trim()} ${lastName.trim()}. ${paragraph.trim()}.
-          I feel ${emotionString.trim()} about it. Give me some advice using this another advice: 
-          ${aiResponse.trim()}. You should be personal, sensitive, no bias, friendly, and very empathetic. Focus on things about me. Give advice about me.`;
+      const prompt = `You are an advicing bot. Your sole purpose is to address me, and me only. Do not include yourself. You should be personal, sensitive, no bias, friendly, and very empathetic when responding. Make your responses short and concise. Address the advice to me. Do not include yourself. Hi I'm ${firstName.trim()} ${lastName.trim()}. My thoughts are: "${paragraph.trim()}". It may be random but do your best to advice about it. I feel "${emotionString.trim()}" about it. Use this quote as a foundation but DO NOT explicitly mention it, and note that this quote is addressed to me: "${aiResponse.trim()}".`;
 
       generateResponse(prompt, aiResponse.trim())
         .then((res) => {
@@ -97,6 +95,7 @@ const Home = () => {
             emotions: emotionString,
             response: finalAIResponse,
             date: new Date().toISOString().split("T")[0],
+            timestamp: serverTimestamp()
           })
             .then(() => {
               retrieveLogs();
@@ -134,6 +133,9 @@ const Home = () => {
   // Clear Text
   const handleClear = () => {
     setShowResult(false);
+    setParagraph("")
+    setFinalAIResponse("")
+    setEmotions([])
   };
 
   // Get a random AI response
@@ -144,13 +146,20 @@ const Home = () => {
 
   // Retrieve the logs of the current user
   const retrieveLogs = () => {
-    getDocs(logsCollectionRef)
+    getDocs(query(logsCollectionRef, orderBy('timestamp', 'asc')))
       .then((snapshot) => {
         const current = [];
         snapshot.forEach((doc) => {
           current.push(doc.data());
         });
         // @ts-ignore
+        // current.reverse();
+        // current.sort((a, b) => {
+        //   let dateA = new Date(a.date);
+        //   let dateB = new Date(b.date);
+        //   // @ts-ignore
+        //   return dateA - dateB;
+        // });
         setLogs(current);
         console.log("Logs retrieved successfully");
       })
@@ -172,6 +181,17 @@ const Home = () => {
   // When submit button is clicked
   const onSubmitParagraph = (e) => {
     e.preventDefault();
+
+    if (paragraph === "") {
+      alert("What's on your mind? log it in the text area :)")
+      return;
+    }
+
+    if (paragraph.length <= 5) {
+      alert("Message is too short :(")
+      return;
+    }
+
     setShowResult(true);
     setLoadingParagraph(true);
     predictEmotions(paragraph).then((response) => {
@@ -283,7 +303,6 @@ const Home = () => {
         default:
           setAiResponse("no emotion matched");
       }
-
     });
   };
 
@@ -293,14 +312,14 @@ const Home = () => {
             <h1 className="century-gothic text-white font-black text-4xl sm:text-5xl ps-8 sm:ps-14">SentiMetry</h1>
             <button onClick={handleLogout} className="bg-transparent m-0 text-white p-4 rounded-xl lg:pe-12 text-xl hover:text-yellow-200"> Log Out</button>
         </div>
-        <div className="pt-6 px-14 lg:px-28 xl:h-screen">
-            <div className="mb-5 text-start">
-                <h1 className="text-sub-yellow font-bold text-4xl sm:text-5xl">LOGS</h1>
+        <div className="pt-6 px-14 lg:px-28 xl:h-mainContentHeight">
+            <div className="mb-3 text-start">
+                <h1 className="text-sub-yellow font-bold text-4xl sm:text-4xl">LOGS</h1>
             </div>
-            <div className="xl:flex gap-10 h-5/6">
-                <div className="space-y-5 w-full xl:w-1/2 overflow-y-scroll h-96 xl:h-full">
+            <div className="xl:flex xl:flex-wrap gap-10 xl:h-[80vh] justify-center">
+                <div className="space-y-5 w-full xl:w-1/3 overflow-y-scroll h-96 xl:h-full">
                     {logs.length > 0 ? (
-                        logs.map((item, index) => (
+                        logs.slice().reverse().map((item, index) => (
                             <button key={index} className="rounded-2xl w-full xl:w-11/12 p-4 h-max text-start bg-main-green hover:bg-emerald-600 space-y-4" onClick={() => handleOpenLogs(item.
 // @ts-ignore
                             log, item.emotions, item.response, item.date)}>
@@ -328,116 +347,107 @@ const Home = () => {
                     )}
                 </div>
 
-
                 {show == "log" ? (
-                    <div className="mt-4 xl:mt-0 gap-4 w-full">
+                    <div className=" flex flex-col justify-center before:mt-4 xl:mt-0 w-full xl:w-3/5 h-fit">
                         <div className="w-full">
                             <h2 className="text-sub-yellow text-4xl font-bold mb-3">How Are You Feeling?</h2>
-                            <fieldset className="space-y-6">
+                            <fieldset className="">
                                 <form>
-                                    <textarea rows={10} cols={50} placeholder="Enter a Paragraph" onChange={(e) => handleParagraphChange(e)} value={paragraph}
-                                              className="w-full h-full resize-none rounded-2xl p-4 bg-white mb-3 text-black text-xl sm:text-xl md:text-xl lg:text-xl xl:text-xl"
+                                    <textarea placeholder="Enter a Paragraph" onChange={(e) => handleParagraphChange(e)} value={paragraph}
+                                              className="w-full h-44 resize-none rounded-2xl p-4 bg-white mb-3 text-black text-xl sm:text-xl md:text-xl lg:text-xl xl:text-xl"
                                     />
                                 </form>
                             </fieldset>
                         </div>
 
-                        <div className="grid grid-rows-7 w-full">
-                            <div className="row-span-2">
+                        
+                            <div className="">
                                 <h3 className="text-sub-yellow text-4xl font-bold mb-3">Emotions</h3>
                                 {showResult ? (
-                                    <div className="rounded-2xl bg-white p-4 w-full text-black text-xl h-3/4">
+                                    <div className="rounded-2xl bg-white p-4 w-full text-black text-xl h-2/4">
                                         {loadingParagraph ? <EmoLoader /> : "Based on your journal entry, your feelings are " + emotions[0] +
                                                 ", " + emotions[1] + ", and " + emotions[2]}
                                     
                                     </div>
                                 ) : (
-                                    <div className="rounded-2xl bg-white p-4 w-full text-gray-400 text-xl h-3/4">
-                                        Your emotions will display here
+                                    <div className="rounded-2xl bg-white p-4 w-full h-3/4">
+                                        <h1 className="text-gray-400 text-xl">Your emotions will display here</h1>
                                     </div>
                                 )}
                             </div>
 
-                            <div className="row-span-5 mt-10 sm:mt-10">
+                            <div className="lg:h-1/2 xl:h-3/4 mt-3">
                                 <h3 className="text-sub-yellow text-4xl font-bold mb-3">
                                     Response
                                 </h3>
                                 {showResult ? (
-                                    <div className="rounded-2xl bg-white p-4 w-full text-black text-xl h-custom">
+                                    <div className="rounded-2xl bg-white p-4 w-full text-black text-xl h-3/4">
                                         {loadingParagraph ? <EmoLoader /> : finalAIResponse}
                                     </div>
                                     ) : (
-                                    <div className="rounded-2xl bg-white p-4 w-full text-gray-400 text-xl h-custom">
+                                    <div className="rounded-2xl bg-white p-4 w-full text-gray-400 text-xl h-3/4">
                                         {"Response to you will display here"}
                                     </div>
                                 )}
                             </div>
-                        </div>
+
+                            <div className="flex justify-end xl:mt-0 p-3 space-x-4">
+                                <button
+                                    onClick={handleClear}
+                                    className="clear m-0 bg-slate-500 hover:bg-slate-400 p-4 text-xl lg:text-md xl:text-lg font-bold rounded-xl"
+                                >
+                                    Clear All Results
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="font-bold bg-sub-yellow text-white text-xl p-4 m-0 rounded-2xl hover:bg-yellow-500"
+                                    onClick={(e) => onSubmitParagraph(e)}
+                                >
+                                    Submit
+                                </button>
+                            </div>
+                        
                     </div>
                 ) : (
                     <> </>
                 )}
 
                 {show == "history" ? (
-                    <div className="w-full rounded-2xl gap-5 xl:grid xl:grid-cols-3 space-y-3 xl:space-y-0 mt-3 sm:mt-3">
-                        <div className="bg-main-green p-6 col-span-2 rounded-xl xl:h-full">
-                            <div className="space-y-3">
-                                <h1 className="text-yellow-200 font-bold text-5xl">Journal Entry:</h1>
+                    <div className="flex flex-row flex-wrap justify-start items-center w-full xl:w-3/5 rounded-2xl gap-2 mt-8 xl:mt-0 xl:h-[75vh]">
+                        <div className="bg-main-green p-6 rounded-xl h-fit w-full xl:w-1/2">
+                            <div className="overflow-y-scroll  xl:h-[35rem]">
+                                <h1 className="text-yellow-200 font-bold text-4xl">Journal Entry:</h1>
                                 <h3 className="text-2xl ps-5">{openedLogEntry}</h3>
                             </div>
 
                             <h3 className="text-end pt-4">{openedLogDate}</h3>
                         </div>
 
-                        <div className="space-y-5 grid grid-rows-4">
-                            <div className="space-y-3 bg-main-green p-6 rounded-xl row-span-1">
-                                <h1 className="text-yellow-200 font-bold">Emotions:</h1>
-                                <h3 className="text-2xl ps-5">{openedLogEmotions}</h3>
+                        <div className="flex flex-row flex-wrap justify-start items-start gap-2 w-full xl:w-2/5 rounded-xl h-fit">
+                            <div className=" bg-main-green p-6 rounded-xl w-full h-fit">
+                                <h1 className="text-yellow-200 font-bold text-4xl">Emotions:</h1>
+                                <h3 className="text-2xl ps-5 xl:h-[4rem]">{openedLogEmotions}</h3>
                             </div>
 
-                            <div className="space-y-3 bg-main-green p-6 rounded-xl row-span-3">
-                                <h1 className="text-yellow-200 font-bold">Response:</h1>
+                            <div className=" bg-main-green p-6 rounded-xl w-full h-fit overflow-y-scroll xl:h-[30.5rem]">
+                                <h1 className="text-yellow-200 font-bold text-4xl">Response:</h1>
                                 <h3 className="text-2xl ps-5">{openedLogResponse}</h3>
                             </div>
+                            
                         </div>
+                        <div className="w-full flex justify-center">
+                            <button
+                                onClick={() => setShow("log")}
+                                className="clear m-0 bg-sub-yellow p-4 rounded-xl font-bold xl:w-1/2 text-xl hover:bg-yellow-500"
+                            >
+                                Done
+                            </button>
+                          </div>
                     </div>
                 ) : (
                     <> </>
                 )}
                 </div>
-
-                {show == "log" ? (
-                <div className="flex justify-end mt-14 sm:mt-14 xl:mt-0 p-3 space-x-4">
-                     <button
-                        onClick={handleClear}
-                        className="clear m-0 bg-slate-500 hover:bg-slate-400 p-4 text-xl lg:text-md xl:text-lg font-bold rounded-xl"
-                    >
-                        Clear All Results
-                    </button>
-                    <button
-                        type="submit"
-                        className="font-bold bg-sub-yellow text-white text-xl p-4 m-0 rounded-2xl hover:bg-yellow-500"
-                        onClick={(e) => onSubmitParagraph(e)}
-                    >
-                        Submit
-                    </button>
-                </div>
-                ) : (
-                <> </>
-                )}
-
-                {show == "history" ? (
-                <div className="flex justify-end space-x-4 mt-3">
-                    <button
-                        onClick={() => setShow("log")}
-                        className="clear m-0 bg-sub-yellow p-4 rounded-xl font-bold xl:w-1/12 text-xl hover:bg-yellow-500 mt-3"
-                    >
-                        Done
-                    </button>
-                </div>
-            ) : (
-            <> </>
-            )}
         </div>
     </div>
   );

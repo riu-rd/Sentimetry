@@ -77,7 +77,8 @@ const Register = ({user}) => {
   };
 
   return (
-    <section className="flex items-center justify-center mt-10">
+    <section className="flex flex-row items-center justify-center h-screen w-screen">
+    <div className="flex flex-col lg:flex-row items-center justify-center lg:h-screen scale-75 sm:scale-90 lg:scale-100">
         <div>
             <div className="text-center text-main-yellow w-full">
                 <h1 className="drop-shadow-xl text-7xl sm:text-8xl md:text-8xl lg:text-8xl xl:text-9xl century-gothic font-extrabold mx-8 my-4 mt-">
@@ -190,7 +191,7 @@ const Register = ({user}) => {
                 </div>
             </div>
         </div>
-        
+    </div>    
     </section>
   );
 };
