@@ -62,7 +62,8 @@ const Login = ({user}) => {
     }
 
   return (
-    <section className="flex flex-col lg:flex-row items-center justify-center lg:h-screen">
+    <section className="flex flex-row items-center justify-center h-screen w-screen">
+    <div className="flex flex-col lg:flex-row items-center justify-center lg:h-screen scale-75 sm:scale-90 lg:scale-100">
         <div>
             {showModal ? (
                 <>
@@ -178,7 +179,7 @@ const Login = ({user}) => {
                 </form>
             </div>
         </div>
-        
+    </div>    
     </section>
   );
 };
