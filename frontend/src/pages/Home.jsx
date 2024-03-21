@@ -3,7 +3,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { db } from "../firebase.js";
 import predictEmotions from "../apis/predictEmotions";
 import generateResponse from "../apis/generateResponse.js";
-import { collection, addDoc, getDocs, getDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, getDoc, doc, serverTimestamp, query, orderBy } from "firebase/firestore";
 import "../index.css";
 
 import {
@@ -84,8 +84,7 @@ const Home = () => {
       const emotionString = emotions.join(", ");
       setFinalAIResponse("");
 
-      const prompt = `You are an advicing bot: You should be personal, sensitive, no bias, friendly, and very empathetic when responding. Make your responses short and concise. Address the advice to me. Do not include yourself.
-      Hi I'm ${firstName.trim()} ${lastName.trim()}. My thoughts are: ${paragraph.trim()}. I feel ${emotionString.trim()} about it. Use this quote as a foundation but DO NOT explicitly mention it, and note that this quote is addressed to me: "${aiResponse.trim()}".`;
+      const prompt = `You are an advicing bot. Your sole purpose is to address me, and me only. Do not include yourself. You should be personal, sensitive, no bias, friendly, and very empathetic when responding. Make your responses short and concise. Address the advice to me. Do not include yourself. Hi I'm ${firstName.trim()} ${lastName.trim()}. My thoughts are: "${paragraph.trim()}". It may be random but do your best to advice about it. I feel "${emotionString.trim()}" about it. Use this quote as a foundation but DO NOT explicitly mention it, and note that this quote is addressed to me: "${aiResponse.trim()}".`;
 
       generateResponse(prompt, aiResponse.trim())
         .then((res) => {
@@ -96,6 +95,7 @@ const Home = () => {
             emotions: emotionString,
             response: finalAIResponse,
             date: new Date().toISOString().split("T")[0],
+            timestamp: serverTimestamp()
           })
             .then(() => {
               retrieveLogs();
@@ -146,23 +146,20 @@ const Home = () => {
 
   // Retrieve the logs of the current user
   const retrieveLogs = () => {
-    getDocs(logsCollectionRef)
+    getDocs(query(logsCollectionRef, orderBy('timestamp', 'asc')))
       .then((snapshot) => {
         const current = [];
         snapshot.forEach((doc) => {
           current.push(doc.data());
         });
         // @ts-ignore
-        current.sort((a, b) => {
-          // Convert the date strings to Date objects
-          let dateA = new Date(a.date);
-          let dateB = new Date(b.date);
-        
-          // Subtract the dates to get a value that is either negative, positive, or zero
-          // @ts-ignore
-          return dateA - dateB;
-        });
-        // @ts-ignore
+        // current.reverse();
+        // current.sort((a, b) => {
+        //   let dateA = new Date(a.date);
+        //   let dateB = new Date(b.date);
+        //   // @ts-ignore
+        //   return dateA - dateB;
+        // });
         setLogs(current);
         console.log("Logs retrieved successfully");
       })
@@ -350,7 +347,6 @@ const Home = () => {
                     )}
                 </div>
 
-
                 {show == "log" ? (
                     <div className=" flex flex-col justify-center before:mt-4 xl:mt-0 w-full xl:w-3/5 h-fit">
                         <div className="w-full">
@@ -417,9 +413,9 @@ const Home = () => {
                 )}
 
                 {show == "history" ? (
-                    <div className="flex flex-row flex-wrap justify-start items-center w-full xl:w-3/5 rounded-2xl gap-2 mt-3 sm:mt-3 xl:h-[75vh]">
+                    <div className="flex flex-row flex-wrap justify-start items-center w-full xl:w-3/5 rounded-2xl gap-2 mt-8 xl:mt-0 xl:h-[75vh]">
                         <div className="bg-main-green p-6 rounded-xl h-fit w-full xl:w-1/2">
-                            <div className="overflow-y-scroll  xl:h-[34rem]">
+                            <div className="overflow-y-scroll  xl:h-[35rem]">
                                 <h1 className="text-yellow-200 font-bold text-4xl">Journal Entry:</h1>
                                 <h3 className="text-2xl ps-5">{openedLogEntry}</h3>
                             </div>
@@ -430,10 +426,10 @@ const Home = () => {
                         <div className="flex flex-row flex-wrap justify-start items-start gap-2 w-full xl:w-2/5 rounded-xl h-fit">
                             <div className=" bg-main-green p-6 rounded-xl w-full h-fit">
                                 <h1 className="text-yellow-200 font-bold text-4xl">Emotions:</h1>
-                                <h3 className="text-2xl ps-5">{openedLogEmotions}</h3>
+                                <h3 className="text-2xl ps-5 xl:h-[4rem]">{openedLogEmotions}</h3>
                             </div>
 
-                            <div className=" bg-main-green p-6 rounded-xl w-full h-fit overflow-y-scroll xl:h-[29.5rem]">
+                            <div className=" bg-main-green p-6 rounded-xl w-full h-fit overflow-y-scroll xl:h-[30.5rem]">
                                 <h1 className="text-yellow-200 font-bold text-4xl">Response:</h1>
                                 <h3 className="text-2xl ps-5">{openedLogResponse}</h3>
                             </div>
