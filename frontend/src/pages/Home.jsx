@@ -153,6 +153,15 @@ const Home = () => {
           current.push(doc.data());
         });
         // @ts-ignore
+        
+        current.sort((a, b) => {
+          // Convert the date strings to Date objects
+          let dateA = new Date(a.date);
+          let dateB = new Date(b.date);
+        
+          // Subtract the dates to get a value that is either negative, positive, or zero
+          return dateA - dateB;
+        });
         setLogs(current);
         console.log("Logs retrieved successfully");
       })
@@ -174,6 +183,17 @@ const Home = () => {
   // When submit button is clicked
   const onSubmitParagraph = (e) => {
     e.preventDefault();
+
+    if (paragraph === "") {
+      alert("What's on your mind? log it in the text area :)")
+      return;
+    }
+
+    if (paragraph.length <= 5) {
+      alert("Message is too short :(")
+      return;
+    }
+
     setShowResult(true);
     setLoadingParagraph(true);
     predictEmotions(paragraph).then((response) => {
@@ -285,7 +305,6 @@ const Home = () => {
         default:
           setAiResponse("no emotion matched");
       }
-
     });
   };
 
