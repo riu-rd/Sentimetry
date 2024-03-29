@@ -21,6 +21,9 @@ const generateResponse = async (query, hc_response) => {
       }
     }
     generatedText = generatedText.replace(/\s+\d+$/, '');
+    if (!/[.!?]$/.test(generatedText.charAt(generatedText.length - 1))) {
+      generatedText = generatedText.concat(".");
+    }
 
     return generatedText;
   } catch (error) {
