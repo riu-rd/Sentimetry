@@ -2,42 +2,44 @@ import axios from 'axios';
 
 const combineScores = (array1, array2) => {
     const combined = [...array1, ...array2].reduce((acc, { label, score }) => {
-        acc[label] = (acc[label] || 0) + score;
+        if (!acc[label]) {
+            acc[label] = { score: 0, count: 0 };
+        }
+        acc[label].score += score;
+        acc[label].count += 1;
         return acc;
     }, {});
-    return Object.entries(combined).map(([label, score]) => ({ label, score }));
-}
+
+    // Compute the average by dividing the total score by the count
+    return Object.entries(combined).map(([label, { score, count }]) => ({
+        label,
+        score: score / count
+    }));
+};
 
 const predictEmotions = async (paragraph) => {
     try {
-        let lr_result, keras_result, emoroberta_result;
+        const endpoints = [
+            { url: 'https://riu-rd-sentimetry-api.hf.space/logistic-regression', model: 'lr_result' },
+            { url: 'https://riu-rd-sentimetry-api.hf.space/keras', model: 'keras_result' },
+            { url: 'https://riu-rd-emoroberta-api.hf.space/emoroberta', model: 'emoroberta_result' }
+        ];
 
-        try {
-            lr_result = await axios.post('https://riu-rd-sentimetry-api.hf.space/logistic-regression', {
-                input: paragraph
-            });
-        } catch (error) {
-            console.error('Error predicting emotions using logistic regression model:', error);
-        }
+        // Send all requests concurrently and handle failures gracefully
+        const responses = await Promise.all(
+            endpoints.map(endpoint =>
+                axios.post(endpoint.url, { input: paragraph })
+                    .then(response => response.data?.predictions || [])
+                    .catch(error => {
+                        console.error(`Error predicting emotions using ${endpoint.model}:`, error);
+                        return [];
+                    })
+            )
+        );
 
-        try {
-            keras_result = await axios.post('https://riu-rd-sentimetry-api.hf.space/keras', {
-                input: paragraph
-            });
-        } catch (error) {
-            console.error('Error predicting emotions using Keras model:', error);
-        }
-
-        try {
-            emoroberta_result = await axios.post("https://riu-rd-emoroberta-api.hf.space/emoroberta", {
-                input: paragraph
-            });
-        } catch (error) {
-            console.error('Error predicting emotions using EmoRoBERTa model:', error);
-        }
-
-        const combinedLogisticAndKeras = combineScores(lr_result?.data?.predictions || [], keras_result?.data?.predictions || []);
-        const finalCombine = combineScores(combinedLogisticAndKeras, emoroberta_result?.data?.predictions || []);
+        // Combine predictions from all three models, averaging scores
+        const combinedLogisticAndKeras = combineScores(responses[0], responses[1]);
+        const finalCombine = combineScores(combinedLogisticAndKeras, responses[2]);
         const combinedResult = finalCombine.sort((a, b) => b.score - a.score);
 
         return { predictions: combinedResult };

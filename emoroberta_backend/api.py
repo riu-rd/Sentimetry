@@ -1,5 +1,7 @@
 # Built-in
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 import uvicorn
 import re
 
@@ -9,16 +11,22 @@ from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from transformers import RobertaTokenizerFast, TFRobertaForSequenceClassification, pipeline
+from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
+from huggingface_hub import login
+
+# Login
+dotenv_path = Path('../model_space/model_generation/.env')
+load_dotenv(dotenv_path=dotenv_path)
+
+HF_TOKEN = os.getenv('HF_TOKEN')
+login(token=HF_TOKEN)
 
 # Class for Text Body
 class Paragraph(BaseModel):
     input: str
 
 # Load the EmoRoBERTa Model
-tokenizer = RobertaTokenizerFast.from_pretrained("arpanghoshal/EmoRoBERTa")
-model = TFRobertaForSequenceClassification.from_pretrained("arpanghoshal/EmoRoBERTa")
-emotion = pipeline('sentiment-analysis', model='arpanghoshal/EmoRoBERTa', return_all_scores= True)
+emotion = pipeline("text-classification", model="arpanghoshal/EmoRoBERTa", top_k=None)
 
 # Start the app
 app = FastAPI()
@@ -75,5 +83,5 @@ async def predict_emotions_emoroberta(paragraph : Paragraph):
 
     return {"predictions": sorted_result}
 
-# if __name__ == "__main__":
-#   uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)
+if __name__ == "__main__":
+  uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)
